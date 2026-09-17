@@ -1,0 +1,1175 @@
+{
+  "year_min": 1990,
+  "year_max": 2023,
+  "n_rows": 5406,
+  "n_countries": 159,
+  "sources": [
+    "OWID / Global Carbon Project (owid-co2-data)",
+    "NASA GISTEMP global temperature anomaly via OWID grapher"
+  ],
+  "notes": [
+    "Aggregates and bunker fuels (no ISO code) excluded.",
+    "Years 1990-2023; countries with population > 1M.",
+    "co2_total in million tonnes (Mt); co2_intensity in kg CO2 per $ GDP.",
+    "No electricity-mix-by-source in this dataset; energy tab uses primary energy + fossil CO2 split."
+  ],
+  "countries": [
+    {
+      "iso_code": "AFG",
+      "country": "Afghanistan",
+      "region": "South Asia",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "ALB",
+      "country": "Albania",
+      "region": "Europe",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "DZA",
+      "country": "Algeria",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "AGO",
+      "country": "Angola",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "ARG",
+      "country": "Argentina",
+      "region": "Latin America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "ARM",
+      "country": "Armenia",
+      "region": "Europe",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "AUS",
+      "country": "Australia",
+      "region": "Oceania",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "AUT",
+      "country": "Austria",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "AZE",
+      "country": "Azerbaijan",
+      "region": "Europe",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "BHR",
+      "country": "Bahrain",
+      "region": "Middle East",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "BGD",
+      "country": "Bangladesh",
+      "region": "South Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "BLR",
+      "country": "Belarus",
+      "region": "Europe",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "BEL",
+      "country": "Belgium",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "BEN",
+      "country": "Benin",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "BOL",
+      "country": "Bolivia",
+      "region": "Latin America",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "BIH",
+      "country": "Bosnia and Herzegovina",
+      "region": "Europe",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "BWA",
+      "country": "Botswana",
+      "region": "Africa",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "BRA",
+      "country": "Brazil",
+      "region": "Latin America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "BGR",
+      "country": "Bulgaria",
+      "region": "Europe",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "BFA",
+      "country": "Burkina Faso",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "BDI",
+      "country": "Burundi",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "KHM",
+      "country": "Cambodia",
+      "region": "Southeast Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "CMR",
+      "country": "Cameroon",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "CAN",
+      "country": "Canada",
+      "region": "North America",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "CAF",
+      "country": "Central African Republic",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "TCD",
+      "country": "Chad",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "CHL",
+      "country": "Chile",
+      "region": "Latin America",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "CHN",
+      "country": "China",
+      "region": "East Asia",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "COL",
+      "country": "Colombia",
+      "region": "Latin America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "COG",
+      "country": "Congo",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "CRI",
+      "country": "Costa Rica",
+      "region": "Latin America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "CIV",
+      "country": "Cote d'Ivoire",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "HRV",
+      "country": "Croatia",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "CUB",
+      "country": "Cuba",
+      "region": "Latin America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "CYP",
+      "country": "Cyprus",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "CZE",
+      "country": "Czechia",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "COD",
+      "country": "Democratic Republic of Congo",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "DNK",
+      "country": "Denmark",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "DJI",
+      "country": "Djibouti",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "DOM",
+      "country": "Dominican Republic",
+      "region": "Latin America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "TLS",
+      "country": "East Timor",
+      "region": "Southeast Asia",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "ECU",
+      "country": "Ecuador",
+      "region": "Latin America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "EGY",
+      "country": "Egypt",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "SLV",
+      "country": "El Salvador",
+      "region": "Latin America",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "GNQ",
+      "country": "Equatorial Guinea",
+      "region": "Africa",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "ERI",
+      "country": "Eritrea",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "EST",
+      "country": "Estonia",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "SWZ",
+      "country": "Eswatini",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "ETH",
+      "country": "Ethiopia",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "FIN",
+      "country": "Finland",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "FRA",
+      "country": "France",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "GAB",
+      "country": "Gabon",
+      "region": "Africa",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "GMB",
+      "country": "Gambia",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "GEO",
+      "country": "Georgia",
+      "region": "Europe",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "DEU",
+      "country": "Germany",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "GHA",
+      "country": "Ghana",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "GRC",
+      "country": "Greece",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "GTM",
+      "country": "Guatemala",
+      "region": "Latin America",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "GIN",
+      "country": "Guinea",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "GNB",
+      "country": "Guinea-Bissau",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "HTI",
+      "country": "Haiti",
+      "region": "Latin America",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "HND",
+      "country": "Honduras",
+      "region": "Latin America",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "HKG",
+      "country": "Hong Kong",
+      "region": "East Asia",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "HUN",
+      "country": "Hungary",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "IND",
+      "country": "India",
+      "region": "South Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "IDN",
+      "country": "Indonesia",
+      "region": "Southeast Asia",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "IRN",
+      "country": "Iran",
+      "region": "Middle East",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "IRQ",
+      "country": "Iraq",
+      "region": "Middle East",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "IRL",
+      "country": "Ireland",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "ISR",
+      "country": "Israel",
+      "region": "Middle East",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "ITA",
+      "country": "Italy",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "JAM",
+      "country": "Jamaica",
+      "region": "Latin America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "JPN",
+      "country": "Japan",
+      "region": "East Asia",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "JOR",
+      "country": "Jordan",
+      "region": "Middle East",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "KAZ",
+      "country": "Kazakhstan",
+      "region": "Central Asia",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "KEN",
+      "country": "Kenya",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "KWT",
+      "country": "Kuwait",
+      "region": "Middle East",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "KGZ",
+      "country": "Kyrgyzstan",
+      "region": "Central Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "LAO",
+      "country": "Laos",
+      "region": "Southeast Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "LVA",
+      "country": "Latvia",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "LBN",
+      "country": "Lebanon",
+      "region": "Middle East",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "LSO",
+      "country": "Lesotho",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "LBR",
+      "country": "Liberia",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "LBY",
+      "country": "Libya",
+      "region": "Africa",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "LTU",
+      "country": "Lithuania",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "MDG",
+      "country": "Madagascar",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "MWI",
+      "country": "Malawi",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "MYS",
+      "country": "Malaysia",
+      "region": "Southeast Asia",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "MLI",
+      "country": "Mali",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "MRT",
+      "country": "Mauritania",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "MUS",
+      "country": "Mauritius",
+      "region": "Africa",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "MEX",
+      "country": "Mexico",
+      "region": "North America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "MDA",
+      "country": "Moldova",
+      "region": "Europe",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "MNG",
+      "country": "Mongolia",
+      "region": "East Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "MAR",
+      "country": "Morocco",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "MOZ",
+      "country": "Mozambique",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "MMR",
+      "country": "Myanmar",
+      "region": "Southeast Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "NAM",
+      "country": "Namibia",
+      "region": "Africa",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "NPL",
+      "country": "Nepal",
+      "region": "South Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "NLD",
+      "country": "Netherlands",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "NZL",
+      "country": "New Zealand",
+      "region": "Oceania",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "NIC",
+      "country": "Nicaragua",
+      "region": "Latin America",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "NER",
+      "country": "Niger",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "NGA",
+      "country": "Nigeria",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "PRK",
+      "country": "North Korea",
+      "region": "East Asia",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "MKD",
+      "country": "North Macedonia",
+      "region": "Europe",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "NOR",
+      "country": "Norway",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "OMN",
+      "country": "Oman",
+      "region": "Middle East",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "PAK",
+      "country": "Pakistan",
+      "region": "South Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "PSE",
+      "country": "Palestine",
+      "region": "Middle East",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "PAN",
+      "country": "Panama",
+      "region": "Latin America",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "PNG",
+      "country": "Papua New Guinea",
+      "region": "Oceania",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "PRY",
+      "country": "Paraguay",
+      "region": "Latin America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "PER",
+      "country": "Peru",
+      "region": "Latin America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "PHL",
+      "country": "Philippines",
+      "region": "Southeast Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "POL",
+      "country": "Poland",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "PRT",
+      "country": "Portugal",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "QAT",
+      "country": "Qatar",
+      "region": "Middle East",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "ROU",
+      "country": "Romania",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "RUS",
+      "country": "Russia",
+      "region": "Europe",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "RWA",
+      "country": "Rwanda",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "SAU",
+      "country": "Saudi Arabia",
+      "region": "Middle East",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "SEN",
+      "country": "Senegal",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "SRB",
+      "country": "Serbia",
+      "region": "Europe",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "SLE",
+      "country": "Sierra Leone",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "SGP",
+      "country": "Singapore",
+      "region": "Southeast Asia",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "SVK",
+      "country": "Slovakia",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "SVN",
+      "country": "Slovenia",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "SOM",
+      "country": "Somalia",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "ZAF",
+      "country": "South Africa",
+      "region": "Africa",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "KOR",
+      "country": "South Korea",
+      "region": "East Asia",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "SSD",
+      "country": "South Sudan",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "ESP",
+      "country": "Spain",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "LKA",
+      "country": "Sri Lanka",
+      "region": "South Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "SDN",
+      "country": "Sudan",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "SWE",
+      "country": "Sweden",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "CHE",
+      "country": "Switzerland",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "SYR",
+      "country": "Syria",
+      "region": "Middle East",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "TWN",
+      "country": "Taiwan",
+      "region": "East Asia",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "TJK",
+      "country": "Tajikistan",
+      "region": "Central Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "TZA",
+      "country": "Tanzania",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "THA",
+      "country": "Thailand",
+      "region": "Southeast Asia",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "TGO",
+      "country": "Togo",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "TTO",
+      "country": "Trinidad and Tobago",
+      "region": "Latin America",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "TUN",
+      "country": "Tunisia",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "TUR",
+      "country": "Turkey",
+      "region": "Europe",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "TKM",
+      "country": "Turkmenistan",
+      "region": "Central Asia",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "UGA",
+      "country": "Uganda",
+      "region": "Africa",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "UKR",
+      "country": "Ukraine",
+      "region": "Europe",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "ARE",
+      "country": "United Arab Emirates",
+      "region": "Middle East",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "GBR",
+      "country": "United Kingdom",
+      "region": "Europe",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "USA",
+      "country": "United States",
+      "region": "North America",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "URY",
+      "country": "Uruguay",
+      "region": "Latin America",
+      "income_group": "High"
+    },
+    {
+      "iso_code": "UZB",
+      "country": "Uzbekistan",
+      "region": "Central Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "VEN",
+      "country": "Venezuela",
+      "region": "Latin America",
+      "income_group": "Upper Middle"
+    },
+    {
+      "iso_code": "VNM",
+      "country": "Vietnam",
+      "region": "Southeast Asia",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "YEM",
+      "country": "Yemen",
+      "region": "Middle East",
+      "income_group": "Low"
+    },
+    {
+      "iso_code": "ZMB",
+      "country": "Zambia",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    },
+    {
+      "iso_code": "ZWE",
+      "country": "Zimbabwe",
+      "region": "Africa",
+      "income_group": "Lower Middle"
+    }
+  ],
+  "metrics": {
+    "emissions": [
+      {
+        "key": "co2_total",
+        "label": "Co2 Total",
+        "unit": ""
+      },
+      {
+        "key": "co2_per_capita",
+        "label": "Co2 Per Capita",
+        "unit": ""
+      },
+      {
+        "key": "co2_per_gdp",
+        "label": "Co2 Per Gdp",
+        "unit": ""
+      },
+      {
+        "key": "co2_consumption_total",
+        "label": "Co2 Consumption Total",
+        "unit": ""
+      },
+      {
+        "key": "co2_consumption_per_capita",
+        "label": "Co2 Consumption Per Capita",
+        "unit": ""
+      },
+      {
+        "key": "co2_coal",
+        "label": "Co2 Coal",
+        "unit": ""
+      },
+      {
+        "key": "co2_oil",
+        "label": "Co2 Oil",
+        "unit": ""
+      },
+      {
+        "key": "co2_gas",
+        "label": "Co2 Gas",
+        "unit": ""
+      },
+      {
+        "key": "co2_cumulative_total",
+        "label": "Co2 Cumulative Total",
+        "unit": ""
+      }
+    ],
+    "energy": [
+      {
+        "key": "energy_total",
+        "label": "Energy Total",
+        "unit": ""
+      },
+      {
+        "key": "energy_per_capita",
+        "label": "Energy Per Capita",
+        "unit": ""
+      },
+      {
+        "key": "energy_per_gdp",
+        "label": "Energy Per Gdp",
+        "unit": ""
+      }
+    ],
+    "correlation_x": [
+      {
+        "key": "gdp_per_capita",
+        "label": "Gdp Per Capita",
+        "unit": ""
+      },
+      {
+        "key": "co2_per_capita",
+        "label": "Co2 Per Capita",
+        "unit": ""
+      },
+      {
+        "key": "energy_per_capita",
+        "label": "Energy Per Capita",
+        "unit": ""
+      },
+      {
+        "key": "population",
+        "label": "Population",
+        "unit": ""
+      },
+      {
+        "key": "co2_intensity",
+        "label": "Co2 Intensity",
+        "unit": ""
+      }
+    ],
+    "correlation_y": [
+      {
+        "key": "gdp_per_capita",
+        "label": "Gdp Per Capita",
+        "unit": ""
+      },
+      {
+        "key": "co2_per_capita",
+        "label": "Co2 Per Capita",
+        "unit": ""
+      },
+      {
+        "key": "energy_per_capita",
+        "label": "Energy Per Capita",
+        "unit": ""
+      },
+      {
+        "key": "population",
+        "label": "Population",
+        "unit": ""
+      },
+      {
+        "key": "co2_intensity",
+        "label": "Co2 Intensity",
+        "unit": ""
+      }
+    ]
+  },
+  "equity_views": [
+    {
+      "id": "cumulative_vs_annual",
+      "label": "Historical Cumulative vs Current Annual"
+    },
+    {
+      "id": "percapita_vs_total",
+      "label": "Per Capita vs Total (bubble = population)"
+    },
+    {
+      "id": "developed_vs_developing",
+      "label": "High Income vs Rest"
+    },
+    {
+      "id": "consumption_vs_territorial",
+      "label": "Consumption vs Territorial (Carbon Leakage)"
+    }
+  ],
+  "default_countries": [
+    "USA",
+    "CHN",
+    "IND",
+    "DEU",
+    "BRA",
+    "GBR",
+    "JPN",
+    "CAN",
+    "AUS",
+    "SAU"
+  ],
+  "embedded_countries": [
+    "IND",
+    "CHN",
+    "USA",
+    "IDN",
+    "PAK",
+    "NGA",
+    "BRA",
+    "BGD",
+    "RUS",
+    "MEX",
+    "ETH",
+    "JPN",
+    "PHL",
+    "EGY",
+    "COD",
+    "VNM",
+    "IRN",
+    "TUR",
+    "DEU",
+    "THA",
+    "GBR",
+    "TZA",
+    "FRA",
+    "ZAF",
+    "ITA",
+    "KEN",
+    "MMR",
+    "COL",
+    "KOR",
+    "SDN",
+    "UGA",
+    "ESP",
+    "DZA",
+    "ARG",
+    "IRQ",
+    "AFG",
+    "YEM",
+    "CAN",
+    "POL",
+    "UKR",
+    "MAR",
+    "AGO",
+    "UZB",
+    "MYS",
+    "PER",
+    "GHA",
+    "MOZ",
+    "SAU",
+    "MDG",
+    "CIV"
+  ],
+  "embedded_top_n": 50
+}

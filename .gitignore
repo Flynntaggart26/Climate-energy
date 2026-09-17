@@ -1,0 +1,7 @@
+# Re-downloadable raw data (see URLs in data/prep.py)
+data/raw/
+# Full-resolution intermediates (regenerable via prep.py)
+data/data.json
+# OS / editor noise
+.DS_Store
+Thumbs.db
