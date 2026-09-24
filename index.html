@@ -236,6 +236,32 @@
     border-radius: 99px; font-size: .82rem; font-weight: 600; display: none; z-index: 99;
     box-shadow: var(--glow); opacity: 0; transition: opacity .2s ease, transform .2s ease; }
   #toast.show { display: block; opacity: 1; transform: translateX(-50%) translateY(0); }
+  .seg { display: inline-flex; gap: 4px; background: var(--card2); border: 1px solid var(--border);
+    border-radius: 99px; padding: 3px; }
+  .seg button { border: none; background: transparent; border-radius: 99px; padding: 5px 12px;
+    font-size: .76rem; color: var(--muted); box-shadow: none; }
+  .seg button:hover { color: var(--text); box-shadow: none; transform: none; }
+  .seg button[aria-pressed="true"] { background: var(--grad); color: #fff; box-shadow: var(--glow); }
+  #drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(380px, 94vw); z-index: 60;
+    background: var(--card); border-left: 1px solid var(--border); box-shadow: var(--shadow);
+    transform: translateX(105%); transition: transform .28s ease; overflow-y: auto; padding: 22px; }
+  #drawer.open { transform: none; }
+  #drawer h2 { margin: 0; font-size: 1.2rem; letter-spacing: -.01em; }
+  #drawer .sub { color: var(--muted); font-size: .8rem; margin: 2px 0 12px; }
+  #drawer .stat { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0;
+    border-bottom: 1px solid var(--border-soft); font-size: .85rem; }
+  #drawer .stat b { font-variant-numeric: tabular-nums; text-align: right; }
+  .badge { display: inline-block; font-size: .7rem; font-weight: 800; letter-spacing: .05em;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 99px; }
+  .badge.good { background: rgba(0,217,165,.15); color: var(--success); border: 1px solid var(--success); }
+  .badge.warn { background: rgba(255,184,0,.13); color: var(--warning); border: 1px solid var(--warning); }
+  .badge.bad { background: rgba(255,107,107,.13); color: var(--danger); border: 1px solid var(--danger); }
+  .mixbar { height: 8px; border-radius: 99px; overflow: hidden; display: flex; background: var(--border-soft); margin: 6px 0 2px; }
+  .mixbar span { height: 100%; }
+  #scenModal .modal { max-width: 520px; }
+  #scenRateVal { font-weight: 800; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+  .save-row { display: flex; gap: 6px; align-items: center; }
+  .save-row select { max-width: 170px; }
   footer { display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
   footer::before { content: "◈"; color: var(--primary); }
   @media (max-width: 900px) { #kpis { grid-template-columns: repeat(2, 1fr); } .grid2 { grid-template-columns: 1fr; } }
@@ -326,6 +352,32 @@
       <button id="playBtn" title="Animate end year">▶</button>
     </div>
   </div>
+  <div class="control" id="seriesCtl">
+    <label for="seriesSel">Series mode</label>
+    <div class="control-row" style="flex-wrap:wrap">
+      <select id="seriesSel" aria-label="Series mode">
+        <option value="absolute">Absolute</option>
+        <option value="index">Index (start=100)</option>
+        <option value="yoy">YoY % change</option>
+      </select>
+      <label style="font-size:.85rem"><input type="checkbox" id="smoothChk"> 5-yr smooth</label>
+      <label style="font-size:.85rem"><input type="checkbox" id="totalChk"> Total line</label>
+    </div>
+  </div>
+  <div class="control" id="viewsCtl">
+    <label>Saved views</label>
+    <div class="control-row save-row">
+      <select id="viewsSel" aria-label="Saved views"></select>
+      <button id="saveViewBtn" title="Save current view">Save</button>
+      <button id="delViewBtn" title="Delete selected view">✕</button>
+    </div>
+  </div>
+  <div class="control">
+    <label>Scenario</label>
+    <div class="control-row">
+      <button id="scenBtn" class="btn-primary" title="What-if playground">What-if…</button>
+    </div>
+  </div>
   <div class="control" id="filterCtl">
     <label>Region filter</label>
     <div class="control-row" id="regionChips" style="flex-wrap:wrap;max-width:340px"></div>
@@ -377,7 +429,12 @@
   </div>
   <div class="grid2">
     <div class="card">
-      <h2 style="font-size:.95rem;margin:0 0 8px">Top 10 ranking <span id="rankMeta" style="color:var(--muted);font-weight:400"></span></h2>
+      <h2 style="font-size:.95rem;margin:0 0 8px">Ranking <span id="rankMeta" style="color:var(--muted);font-weight:400"></span></h2>
+      <div class="seg" id="rankSeg" role="group" aria-label="Ranking mode" style="margin-bottom:10px">
+        <button data-rank="top" aria-pressed="true">Top 10</button>
+        <button data-rank="fallers" aria-pressed="false">Fastest fallers</button>
+        <button data-rank="risers" aria-pressed="false">Fastest risers</button>
+      </div>
       <div style="overflow:auto"><table id="rankTable" aria-label="Top 10 ranking"></table></div>
     </div>
     <div class="card">
@@ -400,6 +457,42 @@
   </div>
   <div id="selftest" class="card" style="display:none;margin-top:14px"></div>
 </main>
+
+<aside id="drawer" aria-label="Country detail" aria-hidden="true">
+  <div class="control-row" style="justify-content:space-between">
+    <h2 id="drawerName">Country</h2>
+    <button id="drawerClose" title="Close (Esc)">✕</button>
+  </div>
+  <div class="sub" id="drawerSub"></div>
+  <div id="drawerBadges" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px"></div>
+  <div id="drawerStats"></div>
+  <h3 style="font-size:.8rem;margin:14px 0 4px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Fuel mix (latest CO₂ by source)</h3>
+  <div class="mixbar" id="drawerMix"></div>
+  <div id="drawerMixLbl" style="font-size:.76rem;color:var(--muted)"></div>
+  <div class="control-row" style="margin-top:14px;flex-wrap:wrap">
+    <button id="drawerIsolate">Isolate</button>
+    <button id="drawerScen" class="btn-primary">What-if…</button>
+  </div>
+</aside>
+
+<div class="modal-back" id="scenModal"><div class="modal" role="dialog" aria-label="What-if scenario">
+  <h2>What-if playground</h2>
+  <p style="font-size:.85rem;color:var(--muted);margin:0 0 12px">Pick a country and an annual change rate — see its CO₂ path to 2040 overlaid on the chart, with cumulative savings vs a flat baseline.</p>
+  <div class="control" style="margin-bottom:10px">
+    <label for="scenCountry">Country</label>
+    <select id="scenCountry"></select>
+  </div>
+  <div class="control" style="margin-bottom:10px">
+    <label>Annual change <span id="scenRateVal">−5.0%/yr</span></label>
+    <input type="range" id="scenRate" min="-15" max="5" step="0.5" value="-5" style="width:100%" aria-label="Annual change rate">
+  </div>
+  <div id="scenOut" style="font-size:.86rem;line-height:1.7"></div>
+  <div class="control-row" style="margin-top:14px;justify-content:flex-end">
+    <button id="scenClear">Clear</button>
+    <button id="scenApply" class="btn-primary">Apply to chart</button>
+    <button id="scenClose">Close</button>
+  </div>
+</div></div>
 
 <div class="modal-back" id="helpModal"><div class="modal" role="dialog" aria-label="Help">
   <h2>Keyboard shortcuts &amp; tips</h2>
@@ -1619,6 +1712,11 @@ const state = {
   forecast: false,   // F7: OLS projection to 2030
   regions: [],       // F8: region filter (empty = all)
   tableQuery: '', tableSort: null, tablePage: 0, // F6
+  seriesMode: 'absolute', // v3: 'absolute' | 'index' | 'yoy'
+  smooth: false,     // v3: 5-yr trailing moving average
+  showTotal: false,  // v3: aggregate line of selection
+  rankMode: 'top',   // v3: 'top' | 'fallers' | 'risers'
+  scenario: null,    // v3: { iso, rate } what-if overlay to 2040
 };
 
 // territorial metric -> consumption-based counterpart
@@ -1783,6 +1881,7 @@ function updateURL() {
     fc: state.forecast ? '1' : '0',
     rg: state.regions.join('|'),
     theme: state.theme,
+    sm: state.seriesMode,
   });
   try {
     history.replaceState(null, '', '?' + p.toString());
@@ -1836,6 +1935,7 @@ function loadFromURL() {
   if (p.get('theme') && ['dark','light','ocean','forest','sunset','auto'].includes(p.get('theme'))) {
     state.theme = p.get('theme');
   }
+  if (p.get('sm') && ['absolute','index','yoy'].includes(p.get('sm'))) state.seriesMode = p.get('sm');
 }
 
 // ---------------------------------------------------------------------------
@@ -1863,16 +1963,27 @@ function isoToMeta(iso) {
 function toLineDatasets(rows, opts = {}) {
   const metric = opts.metric || state.metric;
   const filled = state.chartType === 'area' && !opts.noFill;
+  const [a, b] = state.yearRange;
+  // Transformed modes (index / yoy / smoothed) go through the analysis engine;
+  // plain absolute mode keeps the fast direct path.
+  const useEngine = !opts.metric && (state.seriesMode !== 'absolute' || state.smooth);
   return state.countries.map((iso, i) => {
-    const pts = rows.filter(d => d.iso_code === iso)
-      .sort((x, y) => x.year - y.year)
-      .map(d => {
-        let y = d[metric];
-        if (y == null) return null;
-        if (state.scale === 'log' && !(y > 0)) return null;
-        return { x: d.year, y };
-      })
-      .filter(Boolean);
+    let pts;
+    if (useEngine) {
+      pts = countrySeries(iso, metric, a, b).pts;
+      if (state.scale === 'log') pts = pts.filter(p => p.y > 0);
+      if (state.seriesMode === 'yoy') pts = pts.filter(p => isFinite(p.y) && Math.abs(p.y) < 500);
+    } else {
+      pts = rows.filter(d => d.iso_code === iso)
+        .sort((x, y) => x.year - y.year)
+        .map(d => {
+          let y = d[metric];
+          if (y == null) return null;
+          if (state.scale === 'log' && !(y > 0)) return null;
+          return { x: d.year, y };
+        })
+        .filter(Boolean);
+    }
     const color = PALETTE[i % PALETTE.length];
     return {
       label: isoToMeta(iso).country + (opts.suffix || ''),
@@ -1928,6 +2039,134 @@ function tempSeries(a, b) {
     if (!byYear.has(d.year)) byYear.set(d.year, d.temp_anomaly_global);
   }
   return [...byYear.entries()].sort((x, y) => x[0] - y[0]).map(([year, y]) => ({ x: year, y }));
+}
+
+// ---------------------------------------------------------------------------
+// v3 analysis engine: smoothing, index/YoY transforms, peaks, CAGR, decoupling
+// ---------------------------------------------------------------------------
+function smooth5(vals) {
+  return vals.map((v, i) => {
+    const w = vals.slice(Math.max(0, i - 4), i + 1).filter(x => x != null);
+    return w.length ? w.reduce((s, x) => s + x, 0) / w.length : null;
+  });
+}
+
+// Raw (year,value) pairs for one country+metric, optionally smoothed, then
+// transformed by seriesMode. Returns { pts, base }.
+function countrySeries(iso, metric, a, b) {
+  const rows = DATA.filter(d => d.iso_code === iso && d.year >= a && d.year <= b)
+    .sort((x, y) => x.year - y.year);
+  let vals = rows.map(d => d[metric]);
+  if (state.smooth) vals = smooth5(vals);
+  const years = rows.map(d => d.year);
+  const pairs = years.map((y, i) => ({ x: y, y: vals[i] })).filter(p => p.y != null);
+  if (state.seriesMode === 'index') {
+    const base = pairs.length ? pairs[0].y : null;
+    if (base == null || base === 0) return { pts: [], base };
+    return { base, pts: pairs.map(p => ({ x: p.x, y: p.y / base * 100 })) };
+  }
+  if (state.seriesMode === 'yoy') {
+    const pts = [];
+    for (let i = 1; i < pairs.length; i++) {
+      const prev = pairs[i - 1].y;
+      if (prev) pts.push({ x: pairs[i].x, y: (pairs[i].y - prev) / Math.abs(prev) * 100 });
+    }
+    return { pts, base: null };
+  }
+  return { pts: pairs, base: null };
+}
+
+function seriesYLabel() {
+  if (state.seriesMode === 'index') return metricLabel() + ' — index (start year = 100)';
+  if (state.seriesMode === 'yoy') return metricLabel() + ' — annual change (%)';
+  return metricLabel() + (state.smooth ? ' (5-yr avg)' : '');
+}
+
+// Peak CO2 year over the full record + how far the end year sits below it.
+function peakInfo(iso) {
+  const rows = DATA.filter(d => d.iso_code === iso && d.co2_total != null)
+    .sort((x, y) => x.year - y.year);
+  if (rows.length < 3) return null;
+  let peak = rows[0];
+  for (const r of rows) if (r.co2_total > peak.co2_total) peak = r;
+  const last = rows[rows.length - 1];
+  const below = peak.co2_total > 0 ? (peak.co2_total - last.co2_total) / peak.co2_total * 100 : 0;
+  return { year: peak.year, value: peak.co2_total, lastYear: last.year,
+    lastValue: last.co2_total, belowPct: below };
+}
+
+// Compound annual growth rate of co2_total over the trailing N years.
+function co2cagr(iso, span) {
+  const rows = DATA.filter(d => d.iso_code === iso && d.co2_total != null)
+    .sort((x, y) => x.year - y.year);
+  if (rows.length < span + 1) return null;
+  const first = rows[rows.length - 1 - span], last = rows[rows.length - 1];
+  if (!(first.co2_total > 0) || !(last.co2_total > 0)) return null;
+  const cagr = Math.pow(last.co2_total / first.co2_total, 1 / span) - 1;
+  return { cagr, firstYear: first.year, lastYear: last.year };
+}
+
+// Decoupling: GDP up while CO2 down. GDP lags ~2 yrs, so the end point is the
+// latest year in-window that has BOTH gdp and co2 (not blindly yearRange[1]).
+function decoupling(iso) {
+  const [a, b] = state.yearRange;
+  const rows = DATA.filter(d => d.iso_code === iso && d.year >= a && d.year <= b
+    && d.gdp != null && d.co2_total != null).sort((x, y) => x.year - y.year);
+  if (rows.length < 2) return null;
+  const ra = rows[0], rb = rows[rows.length - 1];
+  if (ra.year === rb.year) return null;
+  const gdpChg = (rb.gdp - ra.gdp) / Math.abs(ra.gdp) * 100;
+  const co2Chg = (rb.co2_total - ra.co2_total) / Math.abs(ra.co2_total) * 100;
+  return { gdpChg, co2Chg, decoupled: gdpChg > 0 && co2Chg < 0,
+    fromYear: ra.year, toYear: rb.year };
+}
+
+// Aggregate selection total per year, run through the same transform.
+function totalSeries(metric, a, b) {
+  const years = [];
+  for (let y = a; y <= b; y++) years.push(y);
+  let vals = years.map(y => {
+    let s = 0, n = 0;
+    for (const iso of state.countries) {
+      const r = DATA.filter(d => d.iso_code === iso && d.year === y)[0];
+      if (r && r[metric] != null) { s += r[metric]; n++; }
+    }
+    return n ? s : null;
+  });
+  if (state.smooth) vals = smooth5(vals);
+  let pts = years.map((y, i) => ({ x: y, y: vals[i] })).filter(p => p.y != null);
+  if (state.seriesMode === 'index' && pts.length && pts[0].y) {
+    const base = pts[0].y;
+    pts = pts.map(p => ({ x: p.x, y: p.y / base * 100 }));
+  } else if (state.seriesMode === 'yoy') {
+    const out = [];
+    for (let i = 1; i < pts.length; i++) {
+      if (pts[i - 1].y) out.push({ x: pts[i].x, y: (pts[i].y - pts[i - 1].y) / Math.abs(pts[i - 1].y) * 100 });
+    }
+    pts = out;
+  }
+  return pts;
+}
+
+// What-if scenario: exponential path from last observed value to 2040.
+function scenarioDataset() {
+  if (!state.scenario) return null;
+  if (state.seriesMode !== 'absolute' || (state.view !== 'emissions' && state.view !== 'table')) return null;
+  const { iso, rate } = state.scenario;
+  const rows = DATA.filter(d => d.iso_code === iso && d[state.metric] != null)
+    .sort((x, y) => x.year - y.year);
+  if (!rows.length) return null;
+  const last = rows[rows.length - 1];
+  const data = [{ x: last.year, y: last[state.metric] }];
+  let v = last[state.metric];
+  for (let y = last.year + 1; y <= 2040; y++) { v = v * (1 + rate / 100); data.push({ x: y, y }); }
+  const clean = state.scale === 'log' ? data.filter(p => p.y > 0) : data;
+  const n = clean.length - 1;
+  const savings = last[state.metric] * n - clean.slice(1).reduce((s, p) => s + p.y, 0);
+  return { dataset: { label: isoToMeta(iso).country + ' what-if (' + (rate > 0 ? '+' : '') + rate + '%/yr →2040)',
+      data: clean, borderColor: '#fff', backgroundColor: 'transparent', borderDash: [8, 5],
+      parsing: false, spanGaps: true, borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 3 },
+    baseYear: last.year, baseValue: last[state.metric], savings };
 }
 
 // Shared axis styling (theme-aware).
@@ -2222,11 +2461,26 @@ function renderChart(rows) {
     const area = state.chartType === 'area';
     type = state.chartType === 'bar' ? 'bar' : 'line';
     datasets = toLineDatasets(rows);
-    // Tab 1 special: consumption vs territorial overlay (dashed).
+    // Tab 1 special: consumption vs territorial overlay (dashed, absolute mode only).
     const cmpMetric = CONSUMPTION_PAIRS[state.metric];
-    if (state.view === 'emissions' && state.compare && cmpMetric && type === 'line') {
+    if (state.view === 'emissions' && state.compare && cmpMetric && type === 'line' && state.seriesMode === 'absolute' && !state.smooth) {
       datasets = datasets.concat(
         toLineDatasets(lastCompareRows, { metric: cmpMetric, suffix: ' (consumption)', dash: [6, 4] }));
+    }
+    // v3: selection total aggregate line.
+    if (state.showTotal && type === 'line') {
+      const [ta2, tb2] = state.yearRange;
+      const tot = totalSeries(state.metric, ta2, tb2)
+        .filter(p => !(state.scale === 'log' && !(p.y > 0)));
+      if (tot.length) datasets = datasets.concat([{
+        label: 'Selection total', data: tot, borderColor: themeColors().text,
+        backgroundColor: 'transparent', borderDash: [], parsing: false, spanGaps: true,
+        borderWidth: 3, pointRadius: 0, pointHoverRadius: 4 }]);
+    }
+    // v3: what-if scenario overlay.
+    if (type === 'line') {
+      const scen = scenarioDataset();
+      if (scen) datasets = datasets.concat([scen.dataset]);
     }
     // F7: forecast projection
     if (type === 'line') datasets = datasets.concat(forecastDatasets());
@@ -2245,11 +2499,11 @@ function renderChart(rows) {
         ticks: { color: '#FF6B6B' }, grid: { drawOnChartArea: false } } };
     }
     labels = undefined;
-    const xmax = state.forecast ? Math.max(state.yearRange[1], META.year_max, 2030) : state.yearRange[1];
-    xScale = Object.assign(ax('Year' + (state.forecast ? ' (→2030 forecast)' : '')),
+    const xmax = state.forecast || state.scenario ? Math.max(state.yearRange[1], META.year_max, state.scenario ? 2040 : 2030) : state.yearRange[1];
+    xScale = Object.assign(ax('Year' + (state.forecast ? ' (→2030 forecast)' : '') + (state.scenario ? ' (scenario →2040)' : '')),
       { type: 'linear', min: state.yearRange[0], max: xmax,
         ticks: { stepSize: 5, color: themeColors().tick } });
-    yScale = Object.assign(ax(metricLabel()),
+    yScale = Object.assign(ax(seriesYLabel()),
       { type: state.scale === 'log' ? 'logarithmic' : 'linear' });
     tooltipCallbacks = undefined;
     chart = new Chart(ctx, {
@@ -2335,6 +2589,24 @@ function renderInsight(rows) {
     }
     bullets.push('Caveat: consumption-based CO₂ has gaps (~18% missing); ' +
       'territorial totals are the more complete series. Sources: OWID/GCP + NASA GISTEMP.');
+    if (state.metric === 'co2_total' || state.metric === 'co2_per_capita') {
+      const peaked = state.countries.map(iso => ({ iso, p: peakInfo(iso) }))
+        .filter(x => x.p && x.p.belowPct > 5)
+        .sort((x, y) => y.p.belowPct - x.p.belowPct)[0];
+      if (peaked) {
+        bullets.splice(bullets.length - 1, 0, 'Peaked & declining: <strong>' +
+          isoToMeta(peaked.iso).country + '</strong> is <strong>−' + peaked.p.belowPct.toFixed(0) +
+          '%</strong> below its ' + peaked.p.year + ' peak — click any country for its full profile.');
+      }
+      const decoupled = state.countries.map(iso => ({ iso, d: decoupling(iso) }))
+        .filter(x => x.d && x.d.decoupled);
+      if (decoupled.length) {
+        const y0 = decoupled[0].d.fromYear;
+        bullets.splice(bullets.length - 1, 0, '<strong>' + decoupled.length + ' of ' + state.countries.length +
+          '</strong> countr' + (decoupled.length === 1 ? 'y' : 'ies') + ' decoupled growth from emissions here (GDP up, CO₂ down since ' +
+          y0 + ').');
+      }
+    }
   }
   el.innerHTML = bullets.map(b => '<li>' + b + '</li>').join('');
 }
@@ -2530,8 +2802,9 @@ function renderStats(rows) {
   }
   $('stats').textContent = state.countries.length + ' countries · ' +
     state.yearRange[0] + '–' + state.yearRange[1] + ' · ' +
-    rows.length.toLocaleString() + ' points · ' + metricLabel() +
+    rows.length.toLocaleString() + ' points · ' + seriesYLabel() +
     (state.showTemp ? ' · +temp overlay' : '') + (state.forecast ? ' · forecast→2030' : '') +
+    (state.scenario ? ' · what-if ' + state.scenario.iso + ' ' + state.scenario.rate + '%/yr' : '') +
     (state.regions.length ? ' · regions: ' + state.regions.join(', ') : '');
 }
 
@@ -2576,6 +2849,15 @@ function renderKPIs(rows) {
 }
 function rankingRows() {
   const yr = state.yearRange[1];
+  if (state.rankMode === 'fallers' || state.rankMode === 'risers') {
+    const span = 10;
+    const items = state.countries.map(iso => {
+      const c = co2cagr(iso, span);
+      return c ? { iso, name: isoToMeta(iso).country, v: c.cagr * 100,
+        region: (isoToMeta(iso).region || ''), sub: c.firstYear + '→' + c.lastYear } : null;
+    }).filter(Boolean).sort((a, b) => state.rankMode === 'fallers' ? a.v - b.v : b.v - a.v).slice(0, 10);
+    return { items, key: 'CO₂ CAGR %/yr', yr: yr - span + '–' + yr, isRate: true };
+  }
   const key = (state.view === 'correlation') ? state.corrY
     : (state.view === 'energy') ? 'co2_total' : state.metric;
   const items = state.countries.map(iso => {
@@ -2586,23 +2868,35 @@ function rankingRows() {
   return { items, key, yr };
 }
 function renderRanking() {
-  const { items, key, yr } = rankingRows();
+  const { items, key, yr, isRate } = rankingRows();
   $('rankMeta').textContent = '· ' + key + ' · ' + yr;
-  const max = Math.max(...items.map(i => i.v), 1e-9);
-  let html = '<tr><th>#</th><th>Country</th><th>Region</th><th style="text-align:right">Value</th><th></th></tr>';
+  document.querySelectorAll('#rankSeg button').forEach(b =>
+    b.setAttribute('aria-pressed', b.dataset.rank === state.rankMode ? 'true' : 'false'));
+  const max = Math.max(...items.map(i => Math.abs(i.v)), 1e-9);
+  let html = '<tr><th>#</th><th>Country</th><th>Region</th><th style="text-align:right">' +
+    (isRate ? '%/yr' : 'Value') + '</th><th></th></tr>';
   items.forEach((it, i) => {
-    const pct = Math.max(2, Math.round(it.v / max * 100));
+    const pct = Math.max(2, Math.round(Math.abs(it.v) / max * 100));
+    const val = isRate ? ((it.v >= 0 ? '+' : '') + it.v.toFixed(1) + '%') : fmtN.format(it.v);
+    const barColor = isRate ? (it.v <= 0 ? 'var(--success)' : 'var(--danger)') : 'var(--grad)';
     html += '<tr><td>' + (i + 1) + '</td><td><a href="#" data-iso="' + it.iso + '">' + it.name +
-      '</a></td><td>' + it.region + '</td><td style="text-align:right"><strong>' +
-      fmtN.format(it.v) + '</strong></td><td><div class="bar-track"><div class="bar-fill" style="width:' +
-      pct + '%"></div></div></td></tr>';
+      '</a>' + (it.sub ? ' <span style="color:var(--muted);font-size:.72rem">' + it.sub + '</span>' : '') +
+      '</td><td>' + it.region + '</td><td style="text-align:right"><strong>' +
+      val + '</strong></td><td><div class="bar-track"><div class="bar-fill" style="width:' +
+      pct + '%;background:' + barColor + '"></div></div></td></tr>';
   });
   if (!items.length) html += '<tr><td colspan="5">No data for this selection.</td></tr>';
   $('rankTable').innerHTML = html;
   $('rankTable').querySelectorAll('a[data-iso]').forEach(a => {
-    a.onclick = (e) => { e.preventDefault(); state.countries = [a.dataset.iso];
-      buildCountryList($('countrySearch').value || ''); syncCountryBtn(); update(); toast('Isolated ' + a.textContent); };
+    a.onclick = (e) => { e.preventDefault(); openDrawer(a.dataset.iso); };
   });
+  // peak badge line under ranking: who peaked earliest?
+  const peaks = state.countries.map(peakInfo).filter(Boolean)
+    .filter(p => p.belowPct > 1).sort((x, y) => x.year - y.year);
+  if (peaks.length && !isRate) {
+    const iso = state.countries.find(c => { const p = peakInfo(c); return p && p.year === peaks[0].year; });
+    $('rankMeta').textContent += ' · earliest peak: ' + (iso ? isoToMeta(iso).country : '?') + ' (' + peaks[0].year + ')';
+  }
 }
 function tableRows() {
   const q = (state.tableQuery || '').toLowerCase();
@@ -2658,6 +2952,136 @@ function buildRegionChips() {
     };
     box.appendChild(b);
   }
+}
+
+// ---------------------------------------------------------------------------
+// v3: country detail drawer
+// ---------------------------------------------------------------------------
+let drawerIso = null;
+function openDrawer(iso) {
+  drawerIso = iso;
+  const m = isoToMeta(iso);
+  const yr = state.yearRange[1];
+  const r = DATA.filter(d => d.iso_code === iso && d.year === yr)[0] || {};
+  $('drawerName').textContent = m.country || iso;
+  $('drawerSub').textContent = (m.region || '') + (m.income_group ? ' · ' + m.income_group + ' income' : '') + ' · ' + yr;
+  const badges = [];
+  const pk = peakInfo(iso);
+  if (pk && pk.belowPct > 5) badges.push('<span class="badge good">−' + pk.belowPct.toFixed(0) + '% since ' + pk.year + ' peak</span>');
+  else if (pk && pk.year === pk.lastYear) badges.push('<span class="badge warn">at record high</span>');
+  const dc = decoupling(iso);
+  if (dc && dc.decoupled) badges.push('<span class="badge good">decoupled ✓</span>');
+  else if (dc && dc.co2Chg > 0 && dc.gdpChg > 0) badges.push('<span class="badge bad">coupled growth</span>');
+  const cg = co2cagr(iso, 10);
+  if (cg) badges.push('<span class="badge ' + (cg.cagr <= 0 ? 'good' : 'warn') + '">10-yr ' +
+    (cg.cagr >= 0 ? '+' : '') + (cg.cagr * 100).toFixed(1) + '%/yr</span>');
+  $('drawerBadges').innerHTML = badges.join('') || '<span style="color:var(--muted);font-size:.8rem">No badges for this window.</span>';
+  const row = (k, v) => '<div class="stat"><span>' + k + '</span><b>' + v + '</b></div>';
+  $('drawerStats').innerHTML =
+    row('CO₂ total', r.co2_total != null ? fmtN.format(r.co2_total) + ' Mt' : '—') +
+    row('CO₂ per capita', r.co2_per_capita != null ? r.co2_per_capita.toFixed(2) + ' t' : '—') +
+    row('CO₂ intensity', r.co2_intensity != null ? r.co2_intensity.toFixed(3) + ' kg/$' : '—') +
+    row('Population', r.population ? fmtN.format(r.population) : '—') +
+    row('GDP / capita', r.gdp_per_capita ? '$' + fmtN.format(r.gdp_per_capita) : '—') +
+    row('Peak year', pk ? pk.year + ' (' + fmtN.format(pk.value) + ' Mt)' : '—') +
+    row('Change (GDP window)', dc ? (dc.fromYear + '→' + dc.toYear + ': ' + (dc.co2Chg >= 0 ? '+' : '') + dc.co2Chg.toFixed(1) + '% CO₂ · ' +
+      (dc.gdpChg >= 0 ? '+' : '') + dc.gdpChg.toFixed(0) + '% GDP') : '—');
+  const fuels = [['co2_coal', 'Coal', '#9aa3c0'], ['co2_oil', 'Oil', '#FFB800'],
+    ['co2_gas', 'Gas', '#4FC3F7'], ['co2_cement', 'Cement', '#BA68C8'], ['co2_flaring', 'Flaring', '#FF6B6B']];
+  const tot = fuels.reduce((s, f) => s + (r[f[0]] || 0), 0);
+  $('drawerMix').innerHTML = tot > 0 ? fuels.map(f =>
+    '<span style="width:' + ((r[f[0]] || 0) / tot * 100) + '%;background:' + f[2] + '" title="' + f[1] + '"></span>').join('') : '';
+  $('drawerMixLbl').textContent = tot > 0 ? fuels.map(f => f[1] + ' ' + ((r[f[0]] || 0) / tot * 100).toFixed(0) + '%').join(' · ') : 'No fuel-split data.';
+  $('drawer').classList.add('open');
+  $('drawer').setAttribute('aria-hidden', 'false');
+}
+function closeDrawer() {
+  drawerIso = null;
+  $('drawer').classList.remove('open');
+  $('drawer').setAttribute('aria-hidden', 'true');
+}
+
+// ---------------------------------------------------------------------------
+// v3: saved views (localStorage presets)
+// ---------------------------------------------------------------------------
+function savedViews() {
+  try { return JSON.parse(localStorage.getItem('cee-views') || '{}'); }
+  catch (e) { return {}; }
+}
+function persistViews(v) {
+  try { localStorage.setItem('cee-views', JSON.stringify(v)); } catch (e) {}
+}
+function snapshotState() {
+  return JSON.parse(JSON.stringify({ view: state.view, countries: state.countries, metric: state.metric,
+    yearRange: state.yearRange, chartType: state.chartType, scale: state.scale, compare: state.compare,
+    equity: state.equity, energyFocus: state.energyFocus, energyMode: state.energyMode,
+    corrX: state.corrX, corrY: state.corrY, corrSize: state.corrSize, theme: state.theme,
+    showTemp: state.showTemp, forecast: state.forecast, regions: state.regions,
+    seriesMode: state.seriesMode, smooth: state.smooth, showTotal: state.showTotal }));
+}
+function applySnapshot(s) {
+  Object.assign(state, JSON.parse(JSON.stringify(s)));
+  state.scenario = null; state.tablePage = 0;
+  buildMetricSelect(); $('metricSel').value = state.metric;
+  buildCountryList($('countrySearch').value || ''); syncCountryBtn(); buildYearSliders();
+  buildRegionChips(); syncAllCtls(); applyTheme(); update();
+}
+function refreshViewsSel() {
+  const sel = $('viewsSel');
+  const v = savedViews();
+  const names = Object.keys(v).sort();
+  sel.innerHTML = names.length ? '' : '<option value="">No saved views</option>';
+  for (const n of names) {
+    const o = document.createElement('option');
+    o.value = n; o.textContent = n;
+    sel.appendChild(o);
+  }
+}
+function syncAllCtls() {
+  syncCompareCtl(); syncViewCtls();
+  $('typeSel').value = state.chartType; $('scaleSel').value = state.scale;
+  $('seriesSel').value = state.seriesMode;
+  $('smoothChk').checked = state.smooth; $('totalChk').checked = state.showTotal;
+}
+
+// ---------------------------------------------------------------------------
+// v3: what-if scenario playground
+// ---------------------------------------------------------------------------
+function openScenario(iso) {
+  buildScenCountries();
+  if (iso) $('scenCountry').value = iso;
+  renderScenario();
+  $('scenModal').classList.add('open');
+}
+function buildScenCountries() {  const sel = $('scenCountry');
+  sel.innerHTML = '';
+  for (const c of META.countries.filter(c => !META.embedded_countries || META.embedded_countries.includes(c.iso_code))) {
+    const o = document.createElement('option');
+    o.value = c.iso_code; o.textContent = c.country;
+    sel.appendChild(o);
+  }
+  sel.value = state.scenario ? state.scenario.iso : (state.countries[0] || 'USA');
+}
+function renderScenario() {
+  const iso = $('scenCountry').value;
+  const rate = parseFloat($('scenRate').value);
+  $('scenRate').style.setProperty('--fill', ((rate - (-15)) / (5 - (-15)) * 100) + '%');
+  $('scenRateVal').textContent = (rate > 0 ? '+' : rate < 0 ? '−' : '') + Math.abs(rate).toFixed(1) + '%/yr';
+  const rows = DATA.filter(d => d.iso_code === iso && d.co2_total != null).sort((x, y) => x.year - y.year);
+  if (!rows.length) { $('scenOut').textContent = 'No data.'; return; }
+  const last = rows[rows.length - 1];
+  let v = last.co2_total, cum = 0;
+  for (let y = last.year + 1; y <= 2040; y++) { v = v * (1 + rate / 100); cum += v; }
+  const flat = last.co2_total * (2040 - last.year);
+  const save = flat - cum;
+  $('scenOut').innerHTML =
+    '<b>' + isoToMeta(iso).country + '</b> emits <b>' + fmtN.format(last.co2_total) + ' Mt</b> in ' + last.year + '.<br>' +
+    'At <b>' + rate + '%/yr</b> → <b>' + fmtN.format(v) + ' Mt</b> in 2040 ' +
+    '(' + (v <= last.co2_total ? '−' : '+') + Math.abs((v - last.co2_total) / last.co2_total * 100).toFixed(0) + '%).<br>' +
+    'Cumulative ' + (last.year + 1) + '–2040: <b>' + fmtN.format(cum) + ' Mt</b> vs flat baseline ' +
+    fmtN.format(flat) + ' Mt → <b style="color:' + (save >= 0 ? 'var(--success)' : 'var(--danger)') + '">' +
+    (save >= 0 ? 'saves ' : 'adds ') + fmtN.format(Math.abs(save)) + ' Mt</b>.' +
+    (state.seriesMode !== 'absolute' ? '<br><span style="color:var(--warning)">Note: overlay draws in Absolute series mode.</span>' : '');
 }
 
 function update() {
@@ -2718,6 +3142,7 @@ function syncViewCtls() {
   $('metricCtl').style.display = generic ? '' : 'none';
   $('typeCtl').style.display = generic ? '' : 'none';
   $('scaleCtl').style.display = generic ? '' : 'none';
+  $('seriesCtl').style.display = generic ? '' : 'none';
   $('overlayCtl').style.display = (state.view === 'emissions' || state.view === 'table') ? '' : 'none';
   if (eq) {
     const r = document.querySelector('input[name="eq"][value="' + state.equity + '"]');
@@ -2734,6 +3159,9 @@ function syncViewCtls() {
   }
   $('tempChk').checked = state.showTemp;
   $('forecastChk').checked = state.forecast;
+  $('seriesSel').value = state.seriesMode;
+  $('smoothChk').checked = state.smooth;
+  $('totalChk').checked = state.showTotal;
 }
 
 function syncCompareCtl() {  const show = state.view === 'emissions';
@@ -2782,7 +3210,7 @@ function wire() {
   $('scaleSel').onchange = (e) => { state.scale = e.target.value; update(); };
   $('countryBtn').onclick = () => $('countryPanel').classList.toggle('open');
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') $('countryPanel').classList.remove('open');
+    if (e.key === 'Escape') { $('countryPanel').classList.remove('open'); closeDrawer(); $('scenModal').classList.remove('open'); }
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       const d = e.key === 'ArrowLeft' ? -1 : 1;
       const [a, b] = state.yearRange;
@@ -2795,6 +3223,12 @@ function wire() {
   $('countrySearch').oninput = (e) => buildCountryList(e.target.value);
   $('tempChk').onchange = (e) => { state.showTemp = e.target.checked; update(); };
   $('forecastChk').onchange = (e) => { state.forecast = e.target.checked; update(); };
+  $('seriesSel').onchange = (e) => { state.seriesMode = e.target.value; update(); };
+  $('smoothChk').onchange = (e) => { state.smooth = e.target.checked; update(); };
+  $('totalChk').onchange = (e) => { state.showTotal = e.target.checked; update(); };
+  document.querySelectorAll('#rankSeg button').forEach(b => {
+    b.onclick = () => { state.rankMode = b.dataset.rank; renderRanking(); };
+  });
   $('tableSearch').oninput = (e) => { state.tableQuery = e.target.value; state.tablePage = 0; renderDataTable(); };
   $('prevPage').onclick = () => { state.tablePage = Math.max(0, state.tablePage - 1); renderDataTable(); };
   $('nextPage').onclick = () => { state.tablePage++; renderDataTable(); };
@@ -2832,11 +3266,12 @@ function wire() {
   $('helpModal').onclick = (e) => { if (e.target.id === 'helpModal') $('helpModal').classList.remove('open'); };
   $('tourBtn').onclick = () => {
     const steps = [
-      '1/5 Pick countries from the Countries dropdown.',
-      '2/5 Switch tabs: Emissions, Energy, Correlation, Equity, Table.',
-      '3/5 Drag years or press ▶ to animate time.',
-      '4/5 Toggle Temp overlay + Forecast 2030, filter by region chips.',
-      '5/5 Export PNG/CSV/JSON, Share copies a live link. Press ? for shortcuts.',
+      '1/6 Pick countries from the Countries dropdown.',
+      '2/6 Switch tabs: Emissions, Energy, Correlation, Equity, Table.',
+      '3/6 Try Series mode: Index (start=100) or YoY % — plus smoothing & total line.',
+      '4/6 Click any country in Ranking for its full profile (peak, decoupling, fuel mix).',
+      '5/6 Open What-if… to project a reduction rate to 2040; Save views to keep setups.',
+      '6/6 Export PNG/CSV/JSON, Share copies a live link. Press ? for shortcuts.',
     ];
     let i = 0;
     const next = () => { if (i < steps.length) toast(steps[i++]); else return; };
@@ -2896,6 +3331,53 @@ function wire() {
     try { await navigator.clipboard.writeText(txt); toast('Insights copied'); }
     catch (e) { toast('Copy blocked by browser'); }
   };
+  // v3: drawer
+  $('drawerClose').onclick = closeDrawer;
+  $('drawerIsolate').onclick = () => {
+    if (!drawerIso) return;
+    state.countries = [drawerIso];
+    buildCountryList($('countrySearch').value || ''); syncCountryBtn(); update();
+    toast('Isolated ' + isoToMeta(drawerIso).country); closeDrawer();
+  };
+  $('drawerScen').onclick = () => {
+    if (!drawerIso) return;
+    const iso = drawerIso; closeDrawer(); openScenario(iso);
+  };
+  // v3: saved views
+  $('saveViewBtn').onclick = () => {
+    const name = (prompt('Name this view:', $('viewsSel').value || 'My view') || '').trim();
+    if (!name) return;
+    const v = savedViews(); v[name] = snapshotState(); persistViews(v);
+    refreshViewsSel(); $('viewsSel').value = name; toast('View saved: ' + name);
+  };
+  $('viewsSel').onchange = (e) => {
+    const v = savedViews();
+    if (e.target.value && v[e.target.value]) { applySnapshot(v[e.target.value]); toast('Loaded: ' + e.target.value); }
+  };
+  $('delViewBtn').onclick = () => {
+    const v = savedViews();
+    if ($('viewsSel').value && v[$('viewsSel').value]) {
+      delete v[$('viewsSel').value]; persistViews(v); refreshViewsSel(); toast('View deleted');
+    }
+  };
+  // v3: scenario modal
+  $('scenBtn').onclick = () => openScenario();
+  $('scenClose').onclick = () => $('scenModal').classList.remove('open');
+  $('scenModal').onclick = (e) => { if (e.target.id === 'scenModal') $('scenModal').classList.remove('open'); };
+  $('scenCountry').onchange = renderScenario;
+  $('scenRate').oninput = renderScenario;
+  $('scenApply').onclick = () => {
+    state.scenario = { iso: $('scenCountry').value, rate: parseFloat($('scenRate').value) };
+    if (!state.countries.includes(state.scenario.iso)) {
+      state.countries.push(state.scenario.iso);
+      buildCountryList($('countrySearch').value || ''); syncCountryBtn();
+    }
+    $('scenModal').classList.remove('open'); update();
+    toast('Scenario on chart →2040');
+  };
+  $('scenClear').onclick = () => {
+    state.scenario = null; $('scenModal').classList.remove('open'); update(); toast('Scenario cleared');
+  };
   document.addEventListener('keydown', (e) => {
     if (e.key === '?') $('helpModal').classList.toggle('open');
     const tabs = ['emissions', 'energy', 'correlation', 'equity', 'table'];
@@ -2933,6 +3415,7 @@ async function init() {
   syncCountryBtn();
   buildYearSliders();
   buildRegionChips();
+  refreshViewsSel();
   $('typeSel').value = state.chartType;
   $('scaleSel').value = state.scale;
   syncCompareCtl();
@@ -2954,6 +3437,29 @@ function runSelfTest() {
     ok('ranking', $('rankTable').rows.length > 1, $('rankTable').rows.length + ' rows');
     ok('datatable', $('dataTable').rows.length > 1, $('dataTable').rows.length + ' rows');
     ok('insights', $('insightList').children.length > 0, $('insightList').children.length + ' bullets');
+    // v3 engine checks (pure functions, no DOM needed)
+    try {
+      const s1 = countrySeries('USA', 'co2_total', 2000, 2020);
+      ok('engine:series', s1.pts.length > 10, s1.pts.length + ' pts');
+      const keep = state.seriesMode;
+      state.seriesMode = 'index';
+      const s2 = countrySeries('USA', 'co2_total', 2000, 2020);
+      ok('engine:index', s2.pts.length && Math.abs(s2.pts[0].y - 100) < 1e-6, 'base=100');
+      state.seriesMode = 'yoy';
+      const s3 = countrySeries('USA', 'co2_total', 2000, 2020);
+      ok('engine:yoy', s3.pts.length === s2.pts.length - 1, s3.pts.length + ' deltas');
+      state.seriesMode = keep;
+      const pk = peakInfo('DEU');
+      ok('engine:peak', pk && pk.year >= 1990 && pk.year <= 2023, pk ? 'DEU peak ' + pk.year : 'none');
+      const cg = co2cagr('USA', 10);
+      ok('engine:cagr', cg && isFinite(cg.cagr), cg ? (cg.cagr * 100).toFixed(2) + '%/yr' : 'none');
+      const dc = decoupling('USA');
+      ok('engine:decoupling', dc && isFinite(dc.gdpChg), dc ? 'gdp ' + dc.gdpChg.toFixed(0) + '%' : 'none');
+      const t = totalSeries('co2_total', 2000, 2020);
+      ok('engine:total', t.length > 10, t.length + ' pts');
+      ok('drawer', !!$('drawer'), 'drawer present');
+      ok('scenario-ui', !!($('scenModal') && $('viewsSel')), 'modal + saved views present');
+    } catch (e) { ok('engine', false, String(e.message || e)); }
     // exercise every view without user interaction
     const cur = state.view;
     for (const v of ['emissions', 'energy', 'correlation', 'equity', 'table']) {

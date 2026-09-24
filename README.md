@@ -56,6 +56,16 @@ Highlights:
 - **Insight panel** — every chart gets a computed 3-bullet interpretation with caveats (no black box; all bullets trace to visible data)
 - **Guided tour & help modal** — onboarding steps and a shortcut reference built in
 
+### Deep analysis (v3 engine)
+
+- **Series modes** — Absolute, Index (start year = 100), or YoY % change, with optional 5-year smoothing and a selection-total aggregate line
+- **Peak detection** — per-country peak-CO₂ year and % below peak, surfaced in insights, ranking, and profiles
+- **Movers ranking** — Top 10, fastest fallers, or fastest risers by 10-year CO₂ CAGR
+- **Decoupling check** — GDP up + CO₂ down badges (GDP-aware window, since GDP lags ~2 years)
+- **Country profiles** — click any ranked country for a drawer with stats, badges, fuel mix, isolate and what-if actions
+- **What-if playground** — project any annual change rate to 2040 with cumulative savings vs a flat baseline, overlaid on the chart
+- **Saved views** — name, restore, and delete full configurations in localStorage (`Save` in the toolbar)
+
 ## Themes
 
 Six hand-tuned themes with matching chart colors (ticks, grids, legends, and tooltips re-tint with the theme):
