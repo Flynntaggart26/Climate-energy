@@ -1,0 +1,66 @@
+name: CI — test every section on live-demo bundle
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate embedded data JSON
+        run: |
+          python3 -c "import json; d=json.load(open('data/data_embedded.json')); m=json.load(open('data/meta_embedded.json')); assert len(d)>1000, len(d); assert len(m['countries'])>=40; assert m['year_min']==1990 and m['year_max']==2023; print(f'data OK: {len(d)} rows, {len(m[\"countries\"])} countries')"
+
+      - name: JS syntax check (inline app script)
+        run: |
+          python3 -c "import re; html=open('index.html',encoding='utf-8').read(); m=re.findall(r'<script>(.*?)</script>', html, re.S); open('/tmp/cee_app.js','w').write(m[-1]); print('scripts:', len(m))"
+          node --check /tmp/cee_app.js && echo JS_SYNTAX_OK
+
+      - name: Feature presence — all 10 features + 5 views + 6 themes
+        run: |
+          python3 - <<'EOF'
+          h = open('index.html', encoding='utf-8').read()
+          need = [
+            # 10 new features
+            'themeSel', 'kpiTotal', 'rankTable', 'tempChk', 'playBtn',
+            'dataTable', 'forecastChk', 'regionChips', 'jsonBtn', 'embedBtn',
+            'helpModal', 'selftest', 'runSelfTest', 'forecastDatasets', 'tempSeries',
+            # views
+            'data-view="emissions"', 'data-view="energy"', 'data-view="correlation"',
+            'data-view="equity"', 'data-view="table"',
+            # themes
+            'data-theme="ocean"', 'value="sunset"',
+            # critical bugfix: URL fns must be top-level (not nested)
+            'function updateURL()', 'function loadFromURL()', 'function validIsos()',
+          ]
+          missing = [s for s in need if s not in h]
+          assert not missing, f'MISSING: {missing}'
+          print(f'FEATURES_OK: {len(need)}/{len(need)} markers present')
+          EOF
+
+      - name: Serve + smoke test over HTTP (live-demo conditions)
+        run: |
+          python3 -m http.server 8931 >/tmp/srv.log 2>&1 &
+          SRV=$!
+          sleep 2
+          curl -sf http://localhost:8931/index.html -o /tmp/page.html
+          python3 - <<'EOF'
+          h = open('/tmp/page.html', encoding='utf-8').read()
+          assert 'Loading data' in h and 'Climate' in h
+          for s in ['kpiTotal','rankTable','dataTable','themeSel','playBtn','regionChips','selftest']:
+              assert s in h, s
+          print(f'SERVE_OK: {len(h)} bytes, all sections present')
+          EOF
+          kill $SRV

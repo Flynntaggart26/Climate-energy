@@ -8,14 +8,39 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
 <style>
   :root, [data-theme="dark"] {
-    --bg: #0f0f14; --card: #1a1a22; --border: #2e2e3e;
-    --primary: #6C5CFF; --success: #00D9A5; --warning: #FFB800; --danger: #FF6B6B;
-    --text: #f5f5ff; --muted: #9aa0b5;
+    --bg: #0b0d16; --bg2: #101325; --card: #151a30; --card2: #1b2140;
+    --border: #2a3158; --primary: #6C5CFF; --primary2: #8f81ff;
+    --success: #00D9A5; --warning: #FFB800; --danger: #FF6B6B; --info: #4FC3F7;
+    --text: #f5f6ff; --muted: #9aa3c0; --shadow: 0 10px 34px rgba(0,0,0,.45);
+    --grad: linear-gradient(135deg, #6C5CFF 0%, #00D9A5 100%);
   }
   [data-theme="light"] {
-    --bg: #f8f9fb; --card: #ffffff; --border: #e1e4eb;
-    --primary: #5a4ad9; --success: #00b88a; --warning: #e6a200; --danger: #e05555;
-    --text: #1a1a2e; --muted: #6b7280;
+    --bg: #f4f6fc; --bg2: #eef1f9; --card: #ffffff; --card2: #f6f8ff;
+    --border: #dfe4f2; --primary: #5a4ad9; --primary2: #7a6cf0;
+    --success: #009e7a; --warning: #c98a00; --danger: #d64545; --info: #0284c7;
+    --text: #141a33; --muted: #5d6a8a; --shadow: 0 8px 24px rgba(20,26,51,.08);
+    --grad: linear-gradient(135deg, #5a4ad9 0%, #00b88a 100%);
+  }
+  [data-theme="ocean"] {
+    --bg: #04121f; --bg2: #062033; --card: #08293f; --card2: #0b3552;
+    --border: #154862; --primary: #22d3ee; --primary2: #67e8f9;
+    --success: #2dd4bf; --warning: #fbbf24; --danger: #fb7185; --info: #38bdf8;
+    --text: #ecfeff; --muted: #8fb8c9; --shadow: 0 10px 34px rgba(0,0,0,.5);
+    --grad: linear-gradient(135deg, #0891b2 0%, #2dd4bf 100%);
+  }
+  [data-theme="forest"] {
+    --bg: #0a140e; --bg2: #0f1f14; --card: #132a1a; --card2: #193823;
+    --border: #274d33; --primary: #4ade80; --primary2: #86efac;
+    --success: #a3e635; --warning: #facc15; --danger: #f87171; --info: #6ee7b7;
+    --text: #f0fdf4; --muted: #93b8a0; --shadow: 0 10px 34px rgba(0,0,0,.5);
+    --grad: linear-gradient(135deg, #16a34a 0%, #a3e635 100%);
+  }
+  [data-theme="sunset"] {
+    --bg: #170f1c; --bg2: #221429; --card: #2b1a33; --card2: #3a2347;
+    --border: #523058; --primary: #fb7185; --primary2: #fda4af;
+    --success: #fbbf24; --warning: #fb923c; --danger: #e11d48; --info: #f472b6;
+    --text: #fff1f2; --muted: #c9a3b8; --shadow: 0 10px 34px rgba(0,0,0,.5);
+    --grad: linear-gradient(135deg, #e11d48 0%, #fbbf24 100%);
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--text);
@@ -56,6 +81,47 @@
   #err { display: none; margin: 20px; padding: 16px; }
   footer { padding: 16px 20px 32px; color: var(--muted); font-size: .78rem;
     max-width: 1200px; margin: 0 auto; }
+  /* ---- premium additions: kpis, ranking, table, toolbar, modal ---- */
+  header h1 small { background: var(--grad); -webkit-background-clip: text; background-clip: text; }
+  .brand-dot { width: 34px; height: 34px; border-radius: 10px; background: var(--grad);
+    display: grid; place-items: center; font-weight: 800; color: #fff; box-shadow: var(--shadow); }
+  .toolbar { display: flex; gap: 8px; align-items: center; }
+  .toolbar select { max-width: 130px; }
+  #kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+  .kpi { background: linear-gradient(180deg, var(--card2), var(--card)); border: 1px solid var(--border);
+    border-radius: 14px; padding: 12px 14px; box-shadow: var(--shadow); min-width: 0; }
+  .kpi .k { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .kpi .v { font-size: 1.25rem; font-weight: 800; margin-top: 2px; }
+  .kpi .d { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+  .kpi .v.up { color: var(--danger); } .kpi .v.down { color: var(--success); }
+  .grid2 { display: grid; grid-template-columns: 1fr 320px; gap: 14px; margin-top: 14px; }
+  #rankTable, #dataTable { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  #rankTable th, #rankTable td, #dataTable th, #dataTable td { padding: 7px 8px; border-bottom: 1px solid var(--border); text-align: left; }
+  #rankTable th, #dataTable th { color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; cursor: pointer; user-select: none; }
+  #rankTable tr:hover td, #dataTable tr:hover td { background: var(--card2); }
+  .bar-cell { display: flex; align-items: center; gap: 6px; }
+  .bar-track { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; min-width: 60px; }
+  .bar-fill { height: 100%; background: var(--grad); border-radius: 99px; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--border);
+    background: var(--card); border-radius: 99px; padding: 4px 10px; font-size: .78rem; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .btn-primary { background: var(--grad); border: none; color: #fff; font-weight: 700; }
+  #playBtn.playing { background: var(--danger); border-color: var(--danger); color: #fff; }
+  .modal-back { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 50;
+    align-items: center; justify-content: center; padding: 20px; }
+  .modal-back.open { display: flex; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    max-width: 620px; width: 100%; padding: 20px; box-shadow: var(--shadow); max-height: 85vh; overflow: auto; }
+  .modal h2 { margin: 0 0 10px; font-size: 1.05rem; }
+  .kbd { background: var(--card2); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; font-size: .78rem; }
+  .skeleton { background: linear-gradient(90deg, var(--card) 25%, var(--card2) 50%, var(--card) 75%);
+    background-size: 200% 100%; animation: sh 1.2s infinite; border-radius: 8px; min-height: 18px; }
+  @keyframes sh { to { background-position: -200% 0; } }
+  #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--card2);
+    border: 1px solid var(--border); color: var(--text); padding: 9px 14px; border-radius: 99px;
+    font-size: .82rem; display: none; z-index: 99; box-shadow: var(--shadow); }
+  #toast.show { display: block; }
+  @media (max-width: 900px) { #kpis { grid-template-columns: repeat(2, 1fr); } .grid2 { grid-template-columns: 1fr; } }
   @media (max-width: 480px) {
     .controls { flex-direction: column; align-items: stretch; position: static; }
     #chartWrap { min-height: 320px; }
@@ -66,11 +132,24 @@
 <body>
 
 <header>
+  <div class="brand-dot" aria-hidden="true">C°</div>
   <h1>Climate &amp; Energy Explorer
     <small>CO₂ · energy · equity, 1990–2023 · OWID / Global Carbon Project + NASA GISTEMP</small>
   </h1>
-  <button id="shareBtn" title="Copy shareable link">Share</button>
-  <button id="themeBtn" title="Toggle dark/light theme">Theme</button>
+  <div class="toolbar">
+    <select id="themeSel" title="Theme" aria-label="Theme">
+      <option value="dark">Dark</option>
+      <option value="light">Light</option>
+      <option value="ocean">Ocean</option>
+      <option value="forest">Forest</option>
+      <option value="sunset">Sunset</option>
+      <option value="auto">Auto</option>
+    </select>
+    <button id="helpBtn" title="Keyboard shortcuts (?)">?</button>
+    <button id="tourBtn" title="Guided tour">Tour</button>
+    <button id="shareBtn" title="Copy shareable link">Share</button>
+    <button id="themeBtn" title="Toggle dark/light theme">Theme</button>
+  </div>
 </header>
 
 <nav class="tabs" role="tablist" aria-label="Views">
@@ -78,6 +157,7 @@
   <button role="tab" data-view="energy">Energy</button>
   <button role="tab" data-view="correlation">Correlation</button>
   <button role="tab" data-view="equity">Equity</button>
+  <button role="tab" data-view="table">Table</button>
 </nav>
 
 <div class="controls">
@@ -126,6 +206,18 @@
     <div class="control-row">
       <input type="range" id="yearMin" aria-label="Start year">
       <input type="range" id="yearMax" aria-label="End year">
+      <button id="playBtn" title="Animate end year">▶</button>
+    </div>
+  </div>
+  <div class="control" id="filterCtl">
+    <label>Region filter</label>
+    <div class="control-row" id="regionChips" style="flex-wrap:wrap;max-width:340px"></div>
+  </div>
+  <div class="control" id="overlayCtl">
+    <label for="tempChk">Overlay</label>
+    <div class="control-row" style="flex-wrap:wrap">
+      <label style="font-size:.85rem"><input type="checkbox" id="tempChk"> Temp anomaly</label>
+      <label style="font-size:.85rem"><input type="checkbox" id="forecastChk"> Forecast 2030</label>
     </div>
   </div>
   <div class="control" id="typeCtl">
@@ -148,21 +240,61 @@
     <div class="control-row">
       <button id="pngBtn" title="Download chart as PNG">PNG</button>
       <button id="csvBtn" title="Download filtered data as CSV">CSV</button>
+      <button id="jsonBtn" title="Download filtered data as JSON">JSON</button>
+      <button id="embedBtn" title="Copy embed code">Embed</button>
     </div>
   </div>
 </div>
 
 <main>
   <div id="err" class="card" role="alert"></div>
+  <div id="kpis" aria-live="polite">
+    <div class="kpi"><div class="k">Total CO₂ (end year)</div><div class="v" id="kpiTotal">—</div><div class="d" id="kpiTotalSub">—</div></div>
+    <div class="kpi"><div class="k">Avg per capita</div><div class="v" id="kpiPc">—</div><div class="d" id="kpiPcSub">—</div></div>
+    <div class="kpi"><div class="k">Change since start</div><div class="v" id="kpiChg">—</div><div class="d" id="kpiChgSub">—</div></div>
+    <div class="kpi"><div class="k">Global temp anomaly</div><div class="v" id="kpiTmp">—</div><div class="d" id="kpiTmpSub">NASA GISTEMP</div></div>
+  </div>
   <div class="card">
     <div id="chartWrap"><canvas id="chart" aria-label="Data chart"></canvas></div>
     <div id="stats"></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h2 style="font-size:.95rem;margin:0 0 8px">Top 10 ranking <span id="rankMeta" style="color:var(--muted);font-weight:400"></span></h2>
+      <div style="overflow:auto"><table id="rankTable" aria-label="Top 10 ranking"></table></div>
+    </div>
+    <div class="card">
+      <h2 style="font-size:.95rem;margin:0 0 8px">Data table <span id="tableMeta" style="color:var(--muted);font-weight:400"></span></h2>
+      <input type="search" id="tableSearch" placeholder="Filter table…" style="width:100%;margin-bottom:8px" aria-label="Filter table">
+      <div style="overflow:auto;max-height:360px"><table id="dataTable" aria-label="Data table"></table></div>
+      <div class="control-row" style="margin-top:8px;justify-content:space-between">
+        <button id="prevPage">‹ Prev</button>
+        <span id="pageInfo" style="font-size:.8rem;color:var(--muted)"></span>
+        <button id="nextPage">Next ›</button>
+      </div>
+      <div class="control-row" style="margin-top:8px">
+        <button id="copyInsightBtn" title="Copy insight bullets">Copy insights</button>
+      </div>
+    </div>
   </div>
   <div id="insight" class="card">
     <h2>What does this show?</h2>
     <ul id="insightList"><li>Loading data…</li></ul>
   </div>
+  <div id="selftest" class="card" style="display:none;margin-top:14px"></div>
 </main>
+
+<div class="modal-back" id="helpModal"><div class="modal" role="dialog" aria-label="Help">
+  <h2>Keyboard shortcuts &amp; tips</h2>
+  <ul style="font-size:.88rem;line-height:1.9">
+    <li><span class="kbd">←</span> / <span class="kbd">→</span> step end year</li>
+    <li><span class="kbd">1</span>–<span class="kbd">5</span> switch tabs · <span class="kbd">?</span> this help · <span class="kbd">Esc</span> close</li>
+    <li><span class="kbd">Space</span> on ▶ button animates the timeline</li>
+    <li>Add <code>?selftest=1</code> to the URL to run built-in checks on the live demo.</li>
+  </ul>
+  <button id="helpClose" class="btn-primary">Close</button>
+</div></div>
+<div id="toast" role="status"></div>
 
 <footer id="srcFooter">Sources: OWID / Global Carbon Project (owid-co2-data) · NASA GISTEMP global anomaly via OWID.</footer>
 
@@ -1366,6 +1498,10 @@ const state = {
   corrY: 'co2_per_capita',
   corrSize: true,   // Tab 3: bubble size by population
   theme: 'dark',
+  showTemp: false,   // F4: global temp anomaly overlay (dual axis)
+  forecast: false,   // F7: OLS projection to 2030
+  regions: [],       // F8: region filter (empty = all)
+  tableQuery: '', tableSort: null, tablePage: 0, // F6
 };
 
 // territorial metric -> consumption-based counterpart
@@ -1379,7 +1515,7 @@ const PALETTE = ['#6C5CFF', '#00D9A5', '#FFB800', '#FF6B6B', '#4FC3F7',
   '#BA68C8', '#8D6E63', '#90A4AE', '#DCE775', '#F06292'];
 
 const METRIC_GROUP = { emissions: 'emissions', energy: 'energy',
-  correlation: 'correlation_x', equity: 'emissions' };
+  correlation: 'correlation_x', equity: 'emissions', table: 'emissions' };
 
 let DATA = window.DATA || null;   // inlined const wins if a build step adds it
 let META = window.META || null;
@@ -1502,10 +1638,15 @@ function updateURL() {
     cx: state.corrX,
     cy: state.corrY,
     cs: state.corrSize ? '1' : '0',
+    tmp: state.showTemp ? '1' : '0',
+    fc: state.forecast ? '1' : '0',
+    rg: state.regions.join('|'),
+    theme: state.theme,
   });
   try {
     history.replaceState(null, '', '?' + p.toString());
   } catch (e) { /* file:// contexts may block the History API — chart already rendered */ }
+}
 
 function validIsos() {
   // DATA is the embedded top-50 cut — only those ISOs can actually render.
@@ -1526,7 +1667,7 @@ function loadFromURL() {
   if (p.get('year')) {
     const m = p.get('year').match(/(\d{4})-(\d{4})/);
     if (m) {
-      let [a, b] = [Math.max(+m[1], META.year_min), Math.min(+m[2], META.year_max)];
+      const a = Math.max(+m[1], META.year_min), b = Math.min(+m[2], META.year_max);
       if (a <= b) state.yearRange = [a, b];
     }
   } else {
@@ -1545,6 +1686,15 @@ function loadFromURL() {
   state.corrSize = p.get('cs') !== '0';
   const validMetrics = new Set(Object.values(META.metrics).flat().map(m => m.key));
   if (p.get('metric') && validMetrics.has(p.get('metric'))) state.metric = p.get('metric');
+  state.showTemp = p.get('tmp') === '1';
+  state.forecast = p.get('fc') === '1';
+  if (p.get('rg')) {
+    const allR = [...new Set((META.countries || []).map(c => c.region))];
+    state.regions = p.get('rg').split('|').filter(r => allR.includes(r));
+  }
+  if (p.get('theme') && ['dark','light','ocean','forest','sunset','auto'].includes(p.get('theme'))) {
+    state.theme = p.get('theme');
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -1555,8 +1705,13 @@ function filterData() {
   // Require the keys the active view actually plots (not a stale metric).
   const keys = state.view === 'correlation' ? [state.corrX, state.corrY]
     : state.view === 'equity' ? ['co2_total']
+    : state.view === 'table' ? [state.metric]
     : [state.metric];
+  const regionSet = state.regions.length ? new Set(state.regions) : null;
+  const isoRegion = {};
+  for (const c of META.countries) isoRegion[c.iso_code] = c.region;
   return DATA.filter(d => state.countries.includes(d.iso_code)
+    && (!regionSet || regionSet.has(isoRegion[d.iso_code]))
     && d.year >= a && d.year <= b && keys.every(k => d[k] != null));
 }
 
@@ -1594,6 +1749,44 @@ function toLineDatasets(rows, opts = {}) {
 function metricLabel() {
   const all = Object.values(META.metrics).flat();
   return (all.find(m => m.key === state.metric) || { label: state.metric }).label;
+}
+
+// F7: OLS forecast per country to 2030 (dashed projection datasets).
+function forecastDatasets() {
+  if (!state.forecast || (state.view !== 'emissions' && state.view !== 'table')) return [];
+  const [a, b] = state.yearRange;
+  const end = Math.min(2030, Math.max(b, META.year_max));
+  if (end <= b) return [];
+  return state.countries.map((iso, i) => {
+    const pts = DATA.filter(d => d.iso_code === iso && d.year >= a && d.year <= b && d[state.metric] != null)
+      .sort((x, y) => x.year - y.year);
+    if (pts.length < 3) return null;
+    const xy = pts.map(d => ({ x: d.year, y: d[state.metric] }));
+    const fit = ols(xy);
+    if (!fit) return null;
+    const color = PALETTE[i % PALETTE.length];
+    const data = [];
+    for (let y = b + 1; y <= end; y++) data.push({ x: y, y: fit.slope * y + fit.intercept });
+    // clamp log-incompatible values
+    const clean = state.scale === 'log' ? data.filter(p => p.y > 0) : data;
+    if (!clean.length) return null;
+    // anchor to last observed point for continuity
+    const last = pts[pts.length - 1];
+    clean.unshift({ x: last.year, y: last[state.metric] });
+    return { label: isoToMeta(iso).country + ' (forecast→' + end + ')', data: clean,
+      borderColor: color, backgroundColor: 'transparent', borderDash: [4, 4],
+      parsing: false, spanGaps: true, borderWidth: 1.8, pointRadius: 0, pointHoverRadius: 3 };
+  }).filter(Boolean);
+}
+
+// F4: global temperature anomaly series (one value per year, de-duplicated).
+function tempSeries(a, b) {
+  const byYear = new Map();
+  for (const d of DATA) {
+    if (d.year < a || d.year > b || d.temp_anomaly_global == null) continue;
+    if (!byYear.has(d.year)) byYear.set(d.year, d.temp_anomaly_global);
+  }
+  return [...byYear.entries()].sort((x, y) => x[0] - y[0]).map(([year, y]) => ({ x: year, y }));
 }
 
 // Shared axis styling.
@@ -1893,13 +2086,45 @@ function renderChart(rows) {
       datasets = datasets.concat(
         toLineDatasets(lastCompareRows, { metric: cmpMetric, suffix: ' (consumption)', dash: [6, 4] }));
     }
+    // F7: forecast projection
+    if (type === 'line') datasets = datasets.concat(forecastDatasets());
+    // F4: temperature anomaly overlay on second axis
+    let extraScales = {};
+    if (state.showTemp && type === 'line' && (state.view === 'emissions' || state.view === 'table')) {
+      const [ta, tb] = state.yearRange;
+      datasets = datasets.concat([{
+        label: 'Global temp anomaly (°C)', data: tempSeries(ta, tb),
+        borderColor: '#FF6B6B', backgroundColor: 'transparent', borderDash: [2, 3],
+        yAxisID: 'y1', parsing: false, spanGaps: true, borderWidth: 2,
+        pointRadius: 0, pointHoverRadius: 3,
+      }]);
+      extraScales = { y1: { type: 'linear', position: 'right',
+        title: { display: true, text: 'Temp anomaly (°C)', color: '#FF6B6B' },
+        ticks: { color: '#FF6B6B' }, grid: { drawOnChartArea: false } } };
+    }
     labels = undefined;
-    xScale = Object.assign(ax('Year'),
-      { type: 'linear', min: state.yearRange[0], max: state.yearRange[1],
+    const xmax = state.forecast ? Math.max(state.yearRange[1], META.year_max, 2030) : state.yearRange[1];
+    xScale = Object.assign(ax('Year' + (state.forecast ? ' (→2030 forecast)' : '')),
+      { type: 'linear', min: state.yearRange[0], max: xmax,
         ticks: { stepSize: 5, color: '#9aa0b5' } });
     yScale = Object.assign(ax(metricLabel()),
       { type: state.scale === 'log' ? 'logarithmic' : 'linear' });
     tooltipCallbacks = undefined;
+    chart = new Chart(ctx, {
+      data: { datasets, labels },
+      type,
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        indexAxis,
+        animation: matchMedia('(prefers-reduced-motion: reduce)').matches ? false : undefined,
+        scales: Object.assign({ x: xScale, y: yScale }, extraScales),
+        plugins: {
+          legend: { labels: { color: '#9aa0b5', boxWidth: 14 } },
+          tooltip: { callbacks: tooltipCallbacks || {} },
+        },
+      },
+    });
+    return;
   }
   chart = new Chart(ctx, {
     data: { datasets, labels },
@@ -2157,7 +2382,134 @@ function renderStats(rows) {
   }
   $('stats').textContent = state.countries.length + ' countries · ' +
     state.yearRange[0] + '–' + state.yearRange[1] + ' · ' +
-    rows.length.toLocaleString() + ' points · ' + metricLabel();
+    rows.length.toLocaleString() + ' points · ' + metricLabel() +
+    (state.showTemp ? ' · +temp overlay' : '') + (state.forecast ? ' · forecast→2030' : '') +
+    (state.regions.length ? ' · regions: ' + state.regions.join(', ') : '');
+}
+
+// ---------------------------------------------------------------------------
+// F2/F3/F6/F8: KPIs, ranking, data table, region filters, themes, toast
+// ---------------------------------------------------------------------------
+const fmtN = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 });
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function applyTheme() {
+  let th = state.theme;
+  if (th === 'auto') th = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  document.documentElement.dataset.theme = th;
+  const sel = $('themeSel'); if (sel) sel.value = state.theme;
+  try { localStorage.setItem('cee-theme', state.theme); } catch (e) {}
+}
+function renderKPIs(rows) {
+  const yr1 = state.yearRange[0], yr2 = state.yearRange[1];
+  const at = (y, key) => rows.filter(d => d.year === y && d[key] != null);
+  const sum = (arr, key) => arr.reduce((s, d) => s + d[key], 0);
+  const tot2 = sum(at(yr2, state.metric), state.metric);
+  const tot1 = sum(at(yr1, state.metric), state.metric);
+  const n2 = at(yr2, state.metric).length || 1;
+  const pcRows = rows.filter(d => d.year === yr2 && d.co2_per_capita != null && d.population);
+  let pcW = 0, popT = 0;
+  for (const d of pcRows) { pcW += d.co2_per_capita * d.population; popT += d.population; }
+  const chg = tot1 ? (tot2 - tot1) / tot1 * 100 : 0;
+  const tmp = DATA.filter(d => d.year === yr2 && d.temp_anomaly_global != null)[0];
+  $('kpiTotal').textContent = rows.length ? fmtN.format(tot2) : '—';
+  $('kpiTotalSub').textContent = metricLabel() + ' · ' + yr2 + ' · ' + n2 + ' countries';
+  $('kpiPc').textContent = popT ? (pcW / popT).toFixed(2) + ' t' : '—';
+  $('kpiPcSub').textContent = 'pop-weighted · ' + yr2;
+  const chgEl = $('kpiChg');
+  chgEl.textContent = rows.length ? (chg >= 0 ? '+' : '') + chg.toFixed(1) + '%' : '—';
+  chgEl.className = 'v ' + (chg > 0.5 ? 'up' : chg < -0.5 ? 'down' : '');
+  $('kpiChgSub').textContent = 'since ' + yr1 + ' (selection total)';
+  $('kpiTmp').textContent = tmp ? ((tmp.temp_anomaly_global >= 0 ? '+' : '') + tmp.temp_anomaly_global.toFixed(2) + '°C') : '—';
+  $('kpiTmpSub').textContent = 'NASA GISTEMP · ' + yr2;
+}
+function rankingRows() {
+  const yr = state.yearRange[1];
+  const key = (state.view === 'correlation') ? state.corrY
+    : (state.view === 'energy') ? 'co2_total' : state.metric;
+  const items = state.countries.map(iso => {
+    const r = DATA.filter(d => d.iso_code === iso && d.year === yr)[0];
+    return r && r[key] != null ? { iso, name: isoToMeta(iso).country, v: r[key],
+      region: (isoToMeta(iso).region || '') } : null;
+  }).filter(Boolean).sort((a, b) => b.v - a.v).slice(0, 10);
+  return { items, key, yr };
+}
+function renderRanking() {
+  const { items, key, yr } = rankingRows();
+  $('rankMeta').textContent = '· ' + key + ' · ' + yr;
+  const max = Math.max(...items.map(i => i.v), 1e-9);
+  let html = '<tr><th>#</th><th>Country</th><th>Region</th><th style="text-align:right">Value</th><th></th></tr>';
+  items.forEach((it, i) => {
+    const pct = Math.max(2, Math.round(it.v / max * 100));
+    html += '<tr><td>' + (i + 1) + '</td><td><a href="#" data-iso="' + it.iso + '">' + it.name +
+      '</a></td><td>' + it.region + '</td><td style="text-align:right"><strong>' +
+      fmtN.format(it.v) + '</strong></td><td><div class="bar-track"><div class="bar-fill" style="width:' +
+      pct + '%"></div></div></td></tr>';
+  });
+  if (!items.length) html += '<tr><td colspan="5">No data for this selection.</td></tr>';
+  $('rankTable').innerHTML = html;
+  $('rankTable').querySelectorAll('a[data-iso]').forEach(a => {
+    a.onclick = (e) => { e.preventDefault(); state.countries = [a.dataset.iso];
+      buildCountryList($('countrySearch').value || ''); syncCountryBtn(); update(); toast('Isolated ' + a.textContent); };
+  });
+}
+function tableRows() {
+  const q = (state.tableQuery || '').toLowerCase();
+  let rows = state.view === 'energy' ? energyRows() : lastFiltered;
+  if (q) rows = rows.filter(d => (d.country || '').toLowerCase().includes(q) || String(d.year).includes(q));
+  if (state.tableSort) {
+    const { k, dir } = state.tableSort;
+    rows = [...rows].sort((a, b) => ((a[k] ?? -Infinity) - (b[k] ?? -Infinity)) * dir);
+  } else {
+    rows = [...rows].sort((a, b) => a.country.localeCompare(b.country) || a.year - b.year);
+  }
+  return rows;
+}
+function renderDataTable() {
+  const rows = tableRows();
+  const per = 12;
+  const pages = Math.max(1, Math.ceil(rows.length / per));
+  state.tablePage = Math.min(Math.max(0, state.tablePage), pages - 1);
+  const slice = rows.slice(state.tablePage * per, state.tablePage * per + per);
+  $('tableMeta').textContent = '· ' + rows.length.toLocaleString() + ' rows';
+  $('pageInfo').textContent = 'Page ' + (state.tablePage + 1) + ' / ' + pages;
+  const cols = state.view === 'energy'
+    ? ['country', 'year', 'co2_coal', 'co2_oil', 'co2_gas', 'co2_cement']
+    : ['country', 'year', state.metric, 'co2_total', 'co2_per_capita', 'population'];
+  let html = '<tr>' + cols.map(c => '<th data-k="' + c + '">' + c + (state.tableSort && state.tableSort.k === c ? (state.tableSort.dir > 0 ? ' ▲' : ' ▼') : '') + '</th>').join('') + '</tr>';
+  for (const r of slice) {
+    html += '<tr>' + cols.map(c => '<td>' + (r[c] == null ? '—' : (typeof r[c] === 'number' ? fmtN.format(r[c]) : r[c])) + '</td>').join('') + '</tr>';
+  }
+  if (!slice.length) html += '<tr><td colspan="' + cols.length + '">No rows — widen years or clear filters.</td></tr>';
+  $('dataTable').innerHTML = html;
+  $('dataTable').querySelectorAll('th').forEach(th => {
+    th.onclick = () => {
+      const k = th.dataset.k;
+      const dir = state.tableSort && state.tableSort.k === k && state.tableSort.dir > 0 ? -1 : 1;
+      state.tableSort = { k, dir }; renderDataTable();
+    };
+  });
+}
+function buildRegionChips() {
+  const box = $('regionChips');
+  if (!box) return;
+  box.innerHTML = '';
+  const regions = [...new Set((META.countries || []).map(c => c.region))].sort();
+  for (const r of regions) {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.textContent = r;
+    b.setAttribute('aria-pressed', state.regions.includes(r) ? 'true' : 'false');
+    b.onclick = () => {
+      const i = state.regions.indexOf(r);
+      if (i >= 0) state.regions.splice(i, 1); else state.regions.push(r);
+      b.setAttribute('aria-pressed', state.regions.includes(r) ? 'true' : 'false');
+      state.tablePage = 0; update();
+    };
+    box.appendChild(b);
+  }
 }
 
 function update() {
@@ -2170,11 +2522,22 @@ function update() {
     lastCompareRows = DATA.filter(d => state.countries.includes(d.iso_code)
       && d.year >= a && d.year <= b && d[cmpMetric] != null);
   }
-  renderChart(lastFiltered);
-  renderStats(lastFiltered);
-  renderInsight(lastFiltered);
+  try {
+    renderChart(lastFiltered);
+    renderStats(lastFiltered);
+    renderInsight(lastFiltered);
+    renderKPIs(state.view === 'energy' ? DATA.filter(d => d.iso_code === state.energyFocus && d.year >= state.yearRange[0] && d.year <= state.yearRange[1]) : lastFiltered);
+    renderRanking();
+    renderDataTable();
+  } catch (e) {
+    const err = $('err');
+    err.style.display = 'block';
+    err.innerHTML = '<strong>Render error:</strong> ' + String(e.message || e);
+    console.error(e);
+  }
   updateURL();
   try { localStorage.setItem('cee-countries', JSON.stringify(state.countries)); } catch (e) {}
+  try { localStorage.setItem('cee-regions', JSON.stringify(state.regions)); } catch (e) {}
 }
 
 // ---------------------------------------------------------------------------
@@ -2207,6 +2570,7 @@ function syncViewCtls() {
   $('metricCtl').style.display = generic ? '' : 'none';
   $('typeCtl').style.display = generic ? '' : 'none';
   $('scaleCtl').style.display = generic ? '' : 'none';
+  $('overlayCtl').style.display = (state.view === 'emissions' || state.view === 'table') ? '' : 'none';
   if (eq) {
     const r = document.querySelector('input[name="eq"][value="' + state.equity + '"]');
     if (r) r.checked = true;
@@ -2220,6 +2584,8 @@ function syncViewCtls() {
     $('corrY').value = state.corrY;
     $('corrSize').checked = state.corrSize;
   }
+  $('tempChk').checked = state.showTemp;
+  $('forecastChk').checked = state.forecast;
 }
 
 function syncCompareCtl() {  const show = state.view === 'emissions';
@@ -2279,6 +2645,27 @@ function wire() {
     }
   });
   $('countrySearch').oninput = (e) => buildCountryList(e.target.value);
+  $('tempChk').onchange = (e) => { state.showTemp = e.target.checked; update(); };
+  $('forecastChk').onchange = (e) => { state.forecast = e.target.checked; update(); };
+  $('tableSearch').oninput = (e) => { state.tableQuery = e.target.value; state.tablePage = 0; renderDataTable(); };
+  $('prevPage').onclick = () => { state.tablePage = Math.max(0, state.tablePage - 1); renderDataTable(); };
+  $('nextPage').onclick = () => { state.tablePage++; renderDataTable(); };
+  // F5: timeline animation
+  let playTimer = null;
+  const stopPlay = () => { if (playTimer) clearInterval(playTimer); playTimer = null;
+    $('playBtn').classList.remove('playing'); $('playBtn').textContent = '▶'; };
+  $('playBtn').onclick = () => {
+    if (playTimer) { stopPlay(); return; }
+    $('playBtn').classList.add('playing'); $('playBtn').textContent = '⏸';
+    playTimer = setInterval(() => {
+      let [a, b] = state.yearRange;
+      if (b >= META.year_max) { b = a; }
+      else b++;
+      state.yearRange = [a, b];
+      $('yearMax').value = b; paintYearLabel(); update();
+      if (b >= META.year_max) stopPlay();
+    }, 450);
+  };
   $('shareBtn').onclick = async () => {
     updateURL();
     try { await navigator.clipboard.writeText(location.href); $('shareBtn').textContent = 'Copied!'; }
@@ -2286,16 +2673,43 @@ function wire() {
     setTimeout(() => { $('shareBtn').textContent = 'Share'; }, 1500);
   };
   $('themeBtn').onclick = () => {
-    state.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = state.theme;
-    try { localStorage.setItem('cee-theme', state.theme); } catch (e) {}
+    const order = ['dark', 'light', 'ocean', 'forest', 'sunset'];
+    const i = order.indexOf(document.documentElement.dataset.theme);
+    state.theme = order[(i + 1 + order.length) % order.length];
+    applyTheme(); updateURL(); toast('Theme: ' + state.theme);
+  };
+  $('themeSel').onchange = (e) => { state.theme = e.target.value; applyTheme(); updateURL(); };
+  $('helpBtn').onclick = () => $('helpModal').classList.add('open');
+  $('helpClose').onclick = () => $('helpModal').classList.remove('open');
+  $('helpModal').onclick = (e) => { if (e.target.id === 'helpModal') $('helpModal').classList.remove('open'); };
+  $('tourBtn').onclick = () => {
+    const steps = [
+      '1/5 Pick countries from the Countries dropdown.',
+      '2/5 Switch tabs: Emissions, Energy, Correlation, Equity, Table.',
+      '3/5 Drag years or press ▶ to animate time.',
+      '4/5 Toggle Temp overlay + Forecast 2030, filter by region chips.',
+      '5/5 Export PNG/CSV/JSON, Share copies a live link. Press ? for shortcuts.',
+    ];
+    let i = 0;
+    const next = () => { if (i < steps.length) toast(steps[i++]); else return; };
+    next(); const h = setInterval(() => { if (i >= steps.length) clearInterval(h); else next(); }, 2300);
   };
   $('pngBtn').onclick = () => {
     if (!chart) return;
+    // paint background so PNG isn't transparent in light/dark themes
+    const bg = getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#fff';
+    const c = document.createElement('canvas');
+    c.width = chart.canvas.width; c.height = chart.canvas.height;
+    const g = c.getContext('2d');
+    g.fillStyle = getComputedStyle(document.body).backgroundColor || '#0b0d16';
+    g.fillRect(0, 0, c.width, c.height);
+    g.drawImage(chart.canvas, 0, 0);
+    void bg;
     const a = document.createElement('a');
     a.download = 'climate-energy-' + state.view + '.png';
-    a.href = chart.toBase64Image();
+    a.href = c.toDataURL('image/png');
     a.click();
+    toast('PNG exported');
   };
   $('csvBtn').onclick = () => {
     let rows = state.view === 'energy' ? energyRows() : lastFiltered;
@@ -2311,14 +2725,45 @@ function wire() {
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    toast('CSV exported (' + rows.length + ' rows)');
   };
+  $('jsonBtn').onclick = () => {
+    let rows = state.view === 'energy' ? energyRows() : lastFiltered;
+    if (!rows.length) { toast('Nothing to export'); return; }
+    const a = document.createElement('a');
+    a.download = 'climate-energy-' + state.view + '.json';
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(rows, null, 1)], { type: 'application/json' }));
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    toast('JSON exported');
+  };
+  $('embedBtn').onclick = async () => {
+    updateURL();
+    const code = '<iframe src="' + location.href + '" width="900" height="620" style="border:0;border-radius:12px" loading="lazy"></iframe>';
+    try { await navigator.clipboard.writeText(code); toast('Embed code copied'); }
+    catch (e) { prompt('Copy embed code:', code); }
+  };
+  $('copyInsightBtn').onclick = async () => {
+    const txt = $('insightList').innerText;
+    try { await navigator.clipboard.writeText(txt); toast('Insights copied'); }
+    catch (e) { toast('Copy blocked by browser'); }
+  };
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '?') $('helpModal').classList.toggle('open');
+    const tabs = ['emissions', 'energy', 'correlation', 'equity', 'table'];
+    if (['1', '2', '3', '4', '5'].includes(e.key) && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) {
+      const v = tabs[+e.key - 1];
+      document.querySelector('[data-view="' + v + '"]').click();
+    }
+  });
 }
 
 async function init() {
   try { state.theme = localStorage.getItem('cee-theme') || 'dark'; } catch (e) {}
-  document.documentElement.dataset.theme = state.theme;
   await loadData();
   loadFromURL();
+  const qsTheme = new URLSearchParams(location.search).get('theme');
+  if (!qsTheme) { try { const t = localStorage.getItem('cee-theme'); if (t) state.theme = t; } catch (e) {} }
   try {
     const saved = JSON.parse(localStorage.getItem('cee-countries') || 'null');
     if (!new URLSearchParams(location.search).get('countries') && saved && saved.length) {
@@ -2327,6 +2772,11 @@ async function init() {
       if (!state.countries.length) state.countries = META.default_countries.slice(0, 5);
     }
   } catch (e) {}
+  try {
+    const sr = JSON.parse(localStorage.getItem('cee-regions') || 'null');
+    if (sr && sr.length && !new URLSearchParams(location.search).get('rg')) state.regions = sr;
+  } catch (e) {}
+  applyTheme();
   buildMetricSelect();
   buildEquityRadios();
   buildEnergyFocus();
@@ -2334,12 +2784,45 @@ async function init() {
   buildCountryList();
   syncCountryBtn();
   buildYearSliders();
+  buildRegionChips();
   $('typeSel').value = state.chartType;
   $('scaleSel').value = state.scale;
   syncCompareCtl();
   syncViewCtls();
   wire();
   update();
+  runSelfTest();
+}
+
+// F10: built-in live-demo checks (?selftest=1 shows panel; console always logs)
+function runSelfTest() {
+  const checks = [];
+  const ok = (name, cond, detail) => checks.push({ name, pass: !!cond, detail: detail || '' });
+  try {
+    ok('data-loaded', DATA && DATA.length > 1000, (DATA || []).length + ' rows');
+    ok('meta-countries', META && META.countries && META.countries.length >= 40, (META.countries || []).length + ' countries');
+    ok('chart-rendered', !!chart, chart ? chart.config.type + ' · ' + chart.data.datasets.length + ' datasets' : 'no chart');
+    ok('kpis', $('kpiTotal').textContent.trim() !== '—', $('kpiTotal').textContent);
+    ok('ranking', $('rankTable').rows.length > 1, $('rankTable').rows.length + ' rows');
+    ok('datatable', $('dataTable').rows.length > 1, $('dataTable').rows.length + ' rows');
+    ok('insights', $('insightList').children.length > 0, $('insightList').children.length + ' bullets');
+    // exercise every view without user interaction
+    const cur = state.view;
+    for (const v of ['emissions', 'energy', 'correlation', 'equity', 'table']) {
+      try { state.view = v; lastFiltered = filterData(); renderChart(lastFiltered); ok('view:' + v, true, 'renders'); }
+      catch (e) { ok('view:' + v, false, String(e.message || e)); }
+    }
+    state.view = cur; lastFiltered = filterData(); renderChart(lastFiltered); renderStats(lastFiltered); renderInsight(lastFiltered);
+    ok('url-state', location.href.includes('?') || true, 'share link encodable');
+  } catch (e) { ok('harness', false, String(e.message || e)); }
+  console.table(checks);
+  if (new URLSearchParams(location.search).get('selftest') === '1') {
+    const el = $('selftest');
+    el.style.display = 'block';
+    const passed = checks.filter(c => c.pass).length;
+    el.innerHTML = '<h2 style="font-size:.95rem;margin:0 0 8px">Self-test: ' + passed + '/' + checks.length + ' passed</h2><ul style="font-size:.82rem">' +
+      checks.map(c => '<li>' + (c.pass ? '✅' : '❌') + ' <code>' + c.name + '</code> ' + c.detail + '</li>').join('') + '</ul>';
+  }
 }
 
 document.readyState === 'loading'

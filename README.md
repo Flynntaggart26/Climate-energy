@@ -12,10 +12,14 @@
 | **Energy** | Fossil & industry CO₂ mix per country as stacked area, absolute (Mt) or 100% share |
 | **Correlation Lab** | Any two indicators (GDP, CO₂, energy, population, intensity) as a population-weighted scatter with OLS trend and Pearson r — step through years |
 | **Equity Lens** | Four presets: cumulative vs annual, per-capita vs total bubbles, High-income vs Rest, consumption vs territorial with a y=x reference |
+| **Table** | Sortable, searchable, paginated data grid of the current selection |
 
-- 🔗 **Shareable URLs** — every view, country set, metric, and year range encodes into a link
-- 📥 **PNG & CSV export** of any view
-- 🌗 **Dark/light themes**, fully responsive down to phones, keyboard navigable
+- 🔗 **Shareable URLs** — every view, country set, metric, year range, theme, overlay and region filter encodes into a link
+- 📥 **PNG, CSV, JSON + embed export** of any view, plus copyable insight bullets
+- 🎨 **6 premium themes** (Dark, Light, Ocean, Forest, Sunset, Auto) with gradient brand system, KPI cards and ranking board
+- 📊 **10 built-in upgrades**: KPI dashboard · Top-10 ranking · temp-anomaly dual-axis overlay · timeline animation · data table · 2030 OLS forecast · region filter chips · JSON/embed export · shortcuts + guided tour · `?selftest=1` live-demo harness
+- ⌨️ **Keyboard shortcuts** (`1–5` tabs, `←/→` years, `?` help, `Esc` close), guided tour, toast feedback
+- 🧪 **CI-tested** — `.github/workflows/ci.yml` validates data, JS syntax, feature markers and HTTP smoke test on every push
 - 💡 **Insight panel** — every chart gets a computed 3-bullet interpretation with caveats (no black box; all bullets trace to visible data)
 
 ## Tech
